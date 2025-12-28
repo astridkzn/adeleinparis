@@ -16,11 +16,13 @@ function parseCSV(str) {
 
 function showReco(index) {
   const reco = recos[index];
-  document.getElementById("title").innerText = reco.title || "Pas de titre";
+  document.getElementById("title").innerText = reco.title + (reco.subtitle ? " " + reco.subtitle : "");
   document.getElementById("lieu").innerText = reco.lieu || "";
+
   document.getElementById("more").onclick = () => {
     if (reco.URL) window.open(reco.URL, "_blank");
   };
+
   document.body.style.background = reco.background || "#000";
 }
 
