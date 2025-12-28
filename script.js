@@ -3,26 +3,27 @@ const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS-TXMdmEEJopZ
 let recos = [];
 let currentIndex = 0;
 
-// Récupérer le HTML de la feuille publiée
+// Convertir CSV en tableau d'objets
+function csvToArray(str, delimiter = ",") {
+  const [headerLine, ...lines] = str.trim().split("\n");
+  const headers = headerLine.split(delimiter).map(h => h.trim());
+  return lines.map(line => {
+    const values = line.split(delimiter).map(v => v.trim());
+    const obj = {};
+    headers.forEach((h, i) => obj[h] = values[i] || "");
+    return obj;
+  });
+}
+
+// Récupérer les données
 fetch(sheetURL)
   .then(res => res.text())
-  .then(html => {
-    // Créer un DOM parser
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, "text/html");
-
-    // Récupérer toutes les lignes du tableau
-    const rows = doc.querySelectorAll("table tbody tr");
-    rows.forEach(row => {
-      const cells = row.querySelectorAll("td");
-      recos.push({
-        title: cells[0].innerText.trim(),
-        lieu: cells[1].innerText.trim(),
-        url: cells[2].innerText.trim(),
-        background: cells[3].innerText.trim()
-      });
-    });
-
+  .then(data => {
+    recos = csvToArray(data);
+    if (recos.length === 0) {
+      document.getElementById("title").innerText = "Aucune reco disponible";
+      return;
+    }
     showReco(currentIndex);
   })
   .catch(err => {
@@ -32,12 +33,11 @@ fetch(sheetURL)
 
 function showReco(index) {
   const reco = recos[index];
-  if (!reco) return;
+  document.getElementById("title").innerText = reco.title || "Pas de titre";
+  document.getElementById("lieu").innerText = reco.lieu || "";
 
-  document.getElementById("title").innerText = reco.title;
-  document.getElementById("lieu").innerText = reco.lieu;
   document.getElementById("more").onclick = () => {
-    if (reco.url) window.open(reco.url, "_blank");
+    if (reco.URL) window.open(reco.URL, "_blank");
   };
 
   if (reco.background) {
