@@ -1,30 +1,35 @@
-function goToGenerate() {
-  window.location.href = "generate.html";
-}
+const sheetID = "2PACX-1vS-TXMdmEEJopZfjsiTYrj2mVSf7g8srJ82XOsdumjArTMPIYhkEqBaMuICXNMnP347qAd-5OFFeXAx
+"; 
+const sheetURL = `https://spreadsheets.google.com/feeds/list/${sheetID}/od6/public/values?alt=json`;
 
-const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS-TXMdmEEJopZfjsiTYrj2mVSf7g8srJ82XOsdumjArTMPIYhkEqBaMuICXNMnP347qAd-5OFFeXAx/pubhtml";
+let recos = [];
+let currentIndex = 0;
 
-let data = [];
-
+// Récupération des données Google Sheets
 fetch(sheetURL)
-  .then(response => response.text())
-  .then(text => {
-    const rows = text.split("\n").slice(1);
-    data = rows.map(row => {
-      const [title, lieu, url, background] = row.split(",");
-      return { title, lieu, url, background };
-    });
-    generateReco();
+  .then(res => res.json())
+  .then(data => {
+    recos = data.feed.entry.map(entry => ({
+      title: entry.gsx$title.$t,
+      lieu: entry.gsx$lieu.$t,
+      url: entry.gsx$url.$t
+    }));
+    showReco(currentIndex);
+  })
+  .catch(err => {
+    console.error(err);
+    document.getElementById("title").innerText = "Impossible de charger les données";
   });
 
-function generateReco() {
-  if (!data.length) return;
-
-  const reco = data[Math.floor(Math.random() * data.length)];
-
+function showReco(index) {
+  const reco = recos[index];
   document.getElementById("title").innerText = reco.title;
   document.getElementById("lieu").innerText = reco.lieu;
+  document.getElementById("more").onclick = () => window.open(reco.url, "_blank");
+}
 
-  const moreBtn = document.getElementById("more");
-  moreBtn.onclick = () => window.open(reco.url, "_blank");
+function generateReco() {
+  if (recos.length === 0) return;
+  currentIndex = (currentIndex + 1) % recos.length;
+  showReco(currentIndex);
 }
