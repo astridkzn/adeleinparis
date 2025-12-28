@@ -2,7 +2,7 @@ function goToGenerate() {
   window.location.href = "generate.html";
 }
 
-const sheetURL = "https://docs.google.com/spreadsheets/d/1ITiAYRo5v7i3UA-EauwgJjrhipQQ11XTcYx4W-1INVM/edit?gid=141578692#gid=141578692";
+const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS-TXMdmEEJopZfjsiTYrj2mVSf7g8srJ82XOsdumjArTMPIYhkEqBaMuICXNMnP347qAd-5OFFeXAx/pubhtml";
 
 let data = [];
 
