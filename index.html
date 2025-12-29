@@ -2,16 +2,40 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Adele in Paris — Homepage</title>
-  <link rel="stylesheet" href="styles.css">
-</head>
+  <title>Adele in Paris</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background: #000;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      gap: 16px;
+    }
 
+    input, button {
+      padding: 10px;
+      font-size: 1rem;
+    }
+
+    button {
+      cursor: pointer;
+    }
+  </style>
+</head>
 <body>
+
   <h1>Adele in Paris</h1>
 
-  <label for="start-date">T'es dispo quand chacal :</label><br>
+  <label for="start-date">T'es dispo quand chacal :</label>
   <input type="date" id="start-date">
-  <input type="date" id="end-date"><br><br>
+  <input type="date" id="end-date">
 
   <button id="generate-btn">Générer la reco</button>
 
@@ -20,18 +44,12 @@
       const start = document.getElementById("start-date").value;
       const end = document.getElementById("end-date").value;
 
-      if (!start || !end) {
-        alert("Merci de choisir un intervalle de dates !");
-        return;
-      }
-
-      // Stocker les dates pour generate.html
       localStorage.setItem("startDate", start);
       localStorage.setItem("endDate", end);
 
-      // Redirection vers la page generate
       window.location.href = "generate.html";
     };
   </script>
+
 </body>
 </html>
