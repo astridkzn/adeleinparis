@@ -1,19 +1,17 @@
 const IMAGE_BASE_URL = "https://raw.githubusercontent.com/astridkzn/adeleinparis/main/images/";
 const PHOTO_BASE_URL = "https://raw.githubusercontent.com/astridkzn/adeleinparis/main/photos/";
-
-const selectedRecoIndex = localStorage.getItem("selectedRecoIndex");
-const sheetURL =
-  "https://docs.google.com/spreadsheets/d/e/2PACX-1vS-TXMdmEEJopZfjsiTYrj2mVSf7g8srJ82XOsdumjArTMPIYhkEqBaMuICXNMnP347qAd-5OFFeXAx/pub?output=csv";
+const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS-TXMdmEEJopZfjsiTYrj2mVSf7g8srJ82XOsdumjArTMPIYhkEqBaMuICXNMnP347qAd-5OFFeXAx/pub?output=csv";
 
 let recos = [];
+const selectedIndex = localStorage.getItem("selectedRecoIndex");
 
-function parseCSV(str) {
+function parseCSV(str){
   const lines = str.trim().split("\n");
-  const headers = lines.shift().split(",").map(h => h.trim());
-  return lines.map(line => {
-    const values = line.split(",").map(v => v.trim());
+  const headers = lines.shift().split(",").map(h=>h.trim());
+  return lines.map(line=>{
+    const values = line.split(",").map(v=>v.trim());
     const obj = {};
-    headers.forEach((h,i)=>obj[h]=values[i]||"");
+    headers.forEach((h,i)=> obj[h]=values[i]||"");
     return obj;
   });
 }
@@ -25,8 +23,8 @@ function formatDate(str){
 }
 
 function initDetail(){
-  if(!selectedRecoIndex) return;
-  const reco = recos[selectedRecoIndex];
+  if(selectedIndex===null) return;
+  const reco = recos[selectedIndex];
   if(!reco) return;
 
   const heroImg = document.getElementById("hero-img");
@@ -34,13 +32,12 @@ function initDetail(){
   const heroSubtitle = document.getElementById("hero-subtitle");
   const heroContent = document.getElementById("hero-content");
 
-  // Choix image selon device
-  const isMobile = window.innerWidth <= 768;
-  const heroImageSrc = isMobile ? (reco.background ? IMAGE_BASE_URL + reco.background : "") : (reco.fullscreen ? IMAGE_BASE_URL + reco.fullscreen : "");
-  heroImg.src = heroImageSrc;
+  const isMobile = window.innerWidth<=768;
+  const heroSrc = isMobile ? (reco.background? IMAGE_BASE_URL+reco.background:"") : (reco.fullscreen? IMAGE_BASE_URL+reco.fullscreen:"");
+  heroImg.src = heroSrc;
 
-  heroTitle.innerText = reco.title || "";
-  heroSubtitle.innerText = reco.subtitle || "";
+  heroTitle.innerText = reco.title||"";
+  heroSubtitle.innerText = reco.subtitle||"";
 
   if(reco.color_secondary){
     heroTitle.style.color = `#${reco.color_secondary}`;
@@ -54,11 +51,11 @@ function initDetail(){
   if(reco.color) section.style.backgroundColor = `#${reco.color}`;
   if(reco.color_secondary) section.style.color = `#${reco.color_secondary}`;
 
-  document.getElementById("description").innerText = reco.description || "";
+  document.getElementById("description").innerText = reco.description||"";
 
   const infosDiv = document.getElementById("infos");
-  const start = formatDate(reco.start_date);
-  const end = formatDate(reco.end_date);
+  const start=formatDate(reco.start_date);
+  const end=formatDate(reco.end_date);
   infosDiv.innerHTML = `<div>Dates : ${start} — ${end}</div><div>Prix : ${reco.prix||"N/A"}</div>`;
 
   const galleryDiv = document.getElementById("gallery");
@@ -66,13 +63,13 @@ function initDetail(){
     const photoCol = reco[`photo${i}`];
     if(photoCol){
       const img = document.createElement("img");
-      img.src = PHOTO_BASE_URL + photoCol;
+      img.src = PHOTO_BASE_URL+photoCol;
       galleryDiv.appendChild(img);
     }
   }
 
   // GO button
-  section.querySelector(".sticky-go").onclick = () => {
+  section.querySelector(".sticky-go").onclick = ()=>{
     if(reco.URL) window.open(reco.URL,"_blank");
   };
 }
