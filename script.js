@@ -2,7 +2,9 @@ const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS-TXMdmEEJopZ
 const IMAGE_BASE_URL = "https://raw.githubusercontent.com/astridkzn/adeleinparis/main/images/";
 let recos = [];
 
-// CSV Parser
+// ==========================
+// CSV PARSER
+// ==========================
 function parseCSV(str) {
   const lines = str.trim().split("\n");
   const headers = lines.shift().split(",").map(h => h.trim());
@@ -14,7 +16,9 @@ function parseCSV(str) {
   });
 }
 
-// Filtrage par dates
+// ==========================
+// FILTER BY DATES
+// ==========================
 function filterByDates(data) {
   const startFilter = localStorage.getItem("startDate");
   const endFilter = localStorage.getItem("endDate");
@@ -31,7 +35,9 @@ function filterByDates(data) {
   });
 }
 
-// Construire la grid
+// ==========================
+// BUILD GRID
+// ==========================
 function buildGrid() {
   const grid = document.getElementById("grid");
   grid.innerHTML = "";
@@ -40,8 +46,10 @@ function buildGrid() {
     const card = document.createElement("div");
     card.className = "card";
     if (reco.background) card.style.backgroundImage = `url(${IMAGE_BASE_URL}${reco.background})`;
+    card.style.backgroundSize = "cover";
+    card.style.backgroundPosition = "center";
 
-    // Overlay couleur
+    // Overlay color
     const colorOverlay = document.createElement("div");
     colorOverlay.style.position = "absolute";
     colorOverlay.style.top = 0;
@@ -49,10 +57,10 @@ function buildGrid() {
     colorOverlay.style.width = "100%";
     colorOverlay.style.height = "100%";
     colorOverlay.style.backgroundColor = "transparent";
-    colorOverlay.style.transition = "background-color 0.4s ease";
+    colorOverlay.style.transition = "background-color 0.4s ease, opacity 0.4s ease";
     card.appendChild(colorOverlay);
 
-    // Flèche
+    // Flèche droite
     const arrow = document.createElement("div");
     arrow.className = "arrow";
     card.appendChild(arrow);
@@ -68,23 +76,32 @@ function buildGrid() {
     content.appendChild(p);
     card.appendChild(content);
 
-    // Interaction
+    // Interaction hover / click
     let clickedOnce = false;
     function activateCard() {
-      colorOverlay.style.backgroundColor = reco.color || "#ff3b3b";
+      // faire disparaître l'image
+      card.style.opacity = 0.5; // peut ajuster si tu veux un fade complet
+      colorOverlay.style.backgroundColor = reco.color ? `#${reco.color}` : "#ff3b3b";
+      colorOverlay.style.opacity = 1;
+
+      // texte blanc
       h3.style.color = "#fff";
       p.style.color = "#fff";
+
+      // flèche visible
       arrow.style.opacity = 1;
-      card.classList.add("hovered");
+      arrow.style.transform = "translateX(0)";
     }
 
     card.addEventListener("mouseenter", () => { if (window.innerWidth > 768) activateCard(); });
     card.addEventListener("mouseleave", () => { if (window.innerWidth > 768) {
       colorOverlay.style.backgroundColor = "transparent";
+      colorOverlay.style.opacity = 0;
+      card.style.opacity = 1;
       h3.style.color = "";
       p.style.color = "";
       arrow.style.opacity = 0;
-      card.classList.remove("hovered");
+      arrow.style.transform = "translateX(10px)";
     }});
 
     card.addEventListener("click", () => {
@@ -100,7 +117,9 @@ function buildGrid() {
   document.getElementById("loading").style.display = "none";
 }
 
-// Fetch & init
+// ==========================
+// FETCH & INIT
+// ==========================
 fetch(sheetURL)
   .then(res => res.text())
   .then(csv => {
@@ -114,7 +133,9 @@ fetch(sheetURL)
     document.getElementById("loading").innerText = "Impossible de charger les données";
   });
 
-// Changer dates
+// ==========================
+// CHANGE DATES
+// ==========================
 document.getElementById("change-dates").onclick = () => {
   localStorage.removeItem("startDate");
   localStorage.removeItem("endDate");
