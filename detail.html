@@ -1,22 +1,217 @@
-<!-- Hero CSS -->
-<style>
-  .hero {
-    position: relative;
-    width: 100%;
-    height: 100vh;
-    overflow: hidden;
-    display: flex;
-    align-items: center; /* Desktop: centré verticalement */
-    justify-content: center; /* Desktop: centré horizontalement */
-  }
-  @media(max-width:768px){
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Détails — Adele in Paris</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;700&display=swap');
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Sora', sans-serif;
+      background: #fff;
+      color: #111;
+    }
+
+    /* HERO */
     .hero {
-      align-items: flex-end; /* Mobile: bas */
-      justify-content: flex-start; /* Mobile: gauche */
-      padding: 20px;
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
     }
-    .hero-content {
-      text-align: left;
+
+    .hero img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      z-index: 0;
     }
-  }
-</style>
+
+    .hero .text {
+      position: absolute;
+      z-index: 2;
+      width: 100%;
+      text-align: center;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #fff;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+
+    /* Mobile adjustments */
+    @media (max-width: 768px) {
+      .hero .text {
+        top: auto;
+        bottom: 20px;
+        left: 16px;
+        text-align: left;
+        transform: translateY(0);
+        font-size: 1.5rem;
+      }
+    }
+
+    .hero .text h1 {
+      margin: 0;
+      font-size: 4rem;
+      font-weight: 700;
+    }
+
+    .hero .text p {
+      margin: 8px 0 0 0;
+      font-size: 1.5rem;
+    }
+
+    /* SECTION DETAILS */
+    .section {
+      padding: 40px 20px;
+    }
+
+    .description {
+      white-space: pre-line; /* conserve retours à la ligne */
+      margin-bottom: 20px;
+    }
+
+    .infos {
+      margin-bottom: 20px;
+    }
+
+    .infos p {
+      margin: 4px 0;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+    }
+
+    .gallery img {
+      width: 100%;
+      border-radius: 12px;
+    }
+
+    /* BUTTONS */
+    .btn-go {
+      position: sticky;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 12px 24px;
+      font-size: 1.2rem;
+      border-radius: 50px;
+      border: none;
+      background: #000;
+      color: #fff;
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    .btn-back {
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      font-size: 2rem;
+      cursor: pointer;
+      z-index: 10;
+      background: none;
+      border: none;
+      color: #fff;
+    }
+  </style>
+</head>
+
+<body>
+  <button class="btn-back">&#8592;</button>
+  <section class="hero">
+    <img class="desktop" src="" alt="Hero desktop">
+    <img class="mobile" src="" alt="Hero mobile">
+    <div class="text">
+      <h1 id="title"></h1>
+      <p id="subtitle"></p>
+    </div>
+  </section>
+
+  <section class="section" id="details-section">
+    <div class="description" id="description"></div>
+    <div class="infos" id="infos"></div>
+    <div class="gallery" id="gallery"></div>
+    <button class="btn-go" id="btn-go">GO</button>
+  </section>
+
+  <script>
+    const currentReco = JSON.parse(localStorage.getItem("currentReco") || "{}");
+
+    if (!currentReco.title) {
+      alert("Aucune reco trouvée !");
+      window.location.href = "generate.html";
+    }
+
+    // Hero images
+    const desktopImg = document.querySelector(".hero img.desktop");
+    const mobileImg = document.querySelector(".hero img.mobile");
+    desktopImg.src = currentReco.fullscreen || currentReco.background || "";
+    mobileImg.src = currentReco.background || currentReco.fullscreen || "";
+
+    // Text
+    const titleEl = document.getElementById("title");
+    const subtitleEl = document.getElementById("subtitle");
+    titleEl.innerText = currentReco.title || "";
+    subtitleEl.innerText = currentReco.subtitle || "";
+
+    // Fade in text
+    setTimeout(() => {
+      document.querySelector(".hero .text").style.opacity = 1;
+    }, 300);
+
+    // Section colors
+    const section = document.getElementById("details-section");
+    section.style.backgroundColor = currentReco.color ? `#${currentReco.color}` : "#ff3b3b";
+    section.style.color = currentReco.color_secondary ? `#${currentReco.color_secondary}` : "#fff";
+
+    // Description
+    const descEl = document.getElementById("description");
+    descEl.innerText = currentReco.description || "";
+
+    // Infos
+    const infosEl = document.getElementById("infos");
+    const start = currentReco.start_date ? new Date(currentReco.start_date) : null;
+    const end = currentReco.end_date ? new Date(currentReco.end_date) : null;
+    let infosHTML = "";
+    if (start && end) {
+      const options = { day: '2-digit', month: 'long', year: 'numeric' };
+      infosHTML += `<p>Du ${start.toLocaleDateString('fr-FR', options)} au ${end.toLocaleDateString('fr-FR', options)}</p>`;
+    }
+    if (currentReco.prix) infosHTML += `<p>Prix : ${currentReco.prix}</p>`;
+    infosEl.innerHTML = infosHTML;
+
+    // Gallery
+    const galleryEl = document.getElementById("gallery");
+    for (let i = 1; i <= 10; i++) {
+      const photoKey = `photo${i}`;
+      if (currentReco[photoKey]) {
+        const img = document.createElement("img");
+        img.src = `photos/${currentReco[photoKey]}`;
+        galleryEl.appendChild(img);
+      }
+    }
+
+    // GO button
+    const btnGo = document.getElementById("btn-go");
+    btnGo.onclick = () => {
+      if (currentReco.URL) window.open(currentReco.URL, "_blank");
+    }
+
+    // Back button
+    document.querySelector(".btn-back").onclick = () => {
+      window.history.back();
+    }
+  </script>
+</body>
+</html>
