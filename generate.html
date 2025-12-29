@@ -8,18 +8,21 @@
 
 <body>
 
+  <!-- Message de chargement -->
+  <p id="loading">Chargement…</p>
+
   <!-- Titre et subtitle -->
-  <h2 id="title">
+  <h2 id="title" style="display:none;">
     <span id="main-title"></span><br>
     <span id="subtitle"></span>
   </h2>
 
   <!-- Lieu -->
-  <p id="lieu"></p>
+  <p id="lieu" style="display:none;"></p>
 
   <!-- Boutons -->
-  <button onclick="generateReco()">Nouvelle proposition</button>
-  <button id="more" target="_blank">En savoir plus</button>
+  <button onclick="generateReco()" style="display:none;">Nouvelle proposition</button>
+  <button id="more" target="_blank" style="display:none;">En savoir plus</button>
 
   <script src="script.js"></script>
 </body>
