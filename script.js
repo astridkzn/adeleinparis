@@ -1,35 +1,23 @@
-const sheetURL =
-  "https://docs.google.com/spreadsheets/d/e/2PACX-1vS-TXMdmEEJopZfjsiTYrj2mVSf7g8srJ82XOsdumjArTMPIYhkEqBaMuICXNMnP347qAd-5OFFeXAx/pub?output=csv";
-
-const IMAGE_BASE_URL =
-  "https://raw.githubusercontent.com/astridkzn/adeleinparis/main/images/";
-
+const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS-TXMdmEEJopZfjsiTYrj2mVSf7g8srJ82XOsdumjArTMPIYhkEqBaMuICXNMnP347qAd-5OFFeXAx/pub?output=csv";
+const IMAGE_BASE_URL = "https://raw.githubusercontent.com/astridkzn/adeleinparis/main/images/";
 let recos = [];
 
-/* =========================
-   CSV PARSER
-========================= */
+// CSV Parser
 function parseCSV(str) {
   const lines = str.trim().split("\n");
   const headers = lines.shift().split(",").map(h => h.trim());
-
   return lines.map(line => {
     const values = line.split(",").map(v => v.trim());
     const obj = {};
-    headers.forEach((h, i) => {
-      obj[h] = values[i] || "";
-    });
+    headers.forEach((h, i) => obj[h] = values[i] || "");
     return obj;
   });
 }
 
-/* =========================
-   DATE FILTER
-========================= */
+// Filtrage par dates
 function filterByDates(data) {
   const startFilter = localStorage.getItem("startDate");
   const endFilter = localStorage.getItem("endDate");
-
   if (!startFilter || !endFilter) return data;
 
   const startDate = new Date(startFilter);
@@ -37,17 +25,13 @@ function filterByDates(data) {
 
   return data.filter(r => {
     if (!r.start_date || !r.end_date) return false;
-
     const recoStart = new Date(r.start_date);
     const recoEnd = new Date(r.end_date);
-
     return recoStart <= endDate && recoEnd >= startDate;
   });
 }
 
-/* =========================
-   GRID BUILDER
-========================= */
+// Construire la grid
 function buildGrid() {
   const grid = document.getElementById("grid");
   grid.innerHTML = "";
@@ -55,79 +39,82 @@ function buildGrid() {
   recos.forEach(reco => {
     const card = document.createElement("div");
     card.className = "card";
+    if (reco.background) card.style.backgroundImage = `url(${IMAGE_BASE_URL}${reco.background})`;
 
-    /* --- BACKGROUND IMAGE --- */
-    if (reco.background) {
-      const fileName = reco.background
-        .replace(/"/g, "")
-        .replace(/'/g, "")
-        .trim();
+    // Overlay couleur
+    const colorOverlay = document.createElement("div");
+    colorOverlay.style.position = "absolute";
+    colorOverlay.style.top = 0;
+    colorOverlay.style.left = 0;
+    colorOverlay.style.width = "100%";
+    colorOverlay.style.height = "100%";
+    colorOverlay.style.backgroundColor = "transparent";
+    colorOverlay.style.transition = "background-color 0.4s ease";
+    card.appendChild(colorOverlay);
 
-      const imageUrl = IMAGE_BASE_URL + fileName;
+    // Flèche
+    const arrow = document.createElement("div");
+    arrow.className = "arrow";
+    card.appendChild(arrow);
 
-      card.style.backgroundImage = `url("${imageUrl}")`;
-      card.style.backgroundSize = "cover";
-      card.style.backgroundPosition = "center";
-      card.style.backgroundRepeat = "no-repeat";
-
-      // debug safe
-      console.log("BG:", imageUrl);
-    } else {
-      card.style.background = "#000";
-    }
-
-    /* --- OVERLAY CONTENT --- */
+    // Content
     const content = document.createElement("div");
     content.className = "card-content";
-
-    const title = document.createElement("h3");
-    title.innerText = reco.title || "";
-
-    const subtitle = document.createElement("p");
-    subtitle.innerText = reco.subtitle || "";
-
-    content.appendChild(title);
-    content.appendChild(subtitle);
+    const h3 = document.createElement("h3");
+    h3.innerText = reco.title || "";
+    const p = document.createElement("p");
+    p.innerText = reco.subtitle || "";
+    content.appendChild(h3);
+    content.appendChild(p);
     card.appendChild(content);
 
-    /* --- CLICK --- */
-    card.onclick = () => {
+    // Interaction
+    let clickedOnce = false;
+    function activateCard() {
+      colorOverlay.style.backgroundColor = reco.color || "#ff3b3b";
+      h3.style.color = "#fff";
+      p.style.color = "#fff";
+      arrow.style.opacity = 1;
+      card.classList.add("hovered");
+    }
+
+    card.addEventListener("mouseenter", () => { if (window.innerWidth > 768) activateCard(); });
+    card.addEventListener("mouseleave", () => { if (window.innerWidth > 768) {
+      colorOverlay.style.backgroundColor = "transparent";
+      h3.style.color = "";
+      p.style.color = "";
+      arrow.style.opacity = 0;
+      card.classList.remove("hovered");
+    }});
+
+    card.addEventListener("click", () => {
+      if (window.innerWidth <= 768) {
+        if (!clickedOnce) { activateCard(); clickedOnce = true; return; }
+      }
       if (reco.URL) window.open(reco.URL, "_blank");
-    };
+    });
 
     grid.appendChild(card);
   });
 
   document.getElementById("loading").style.display = "none";
-  grid.style.display = "grid";
 }
 
-/* =========================
-   FETCH & INIT
-========================= */
+// Fetch & init
 fetch(sheetURL)
   .then(res => res.text())
   .then(csv => {
     recos = parseCSV(csv);
     recos = filterByDates(recos);
-
-    if (recos.length === 0) {
-      document.getElementById("loading").innerText =
-        "Aucune reco disponible pour cette période";
-      return;
-    }
-
-    buildGrid();
+    if (recos.length === 0) document.getElementById("loading").innerText = "Aucune reco disponible";
+    else buildGrid();
   })
   .catch(err => {
-    console.error("CSV ERROR", err);
-    document.getElementById("loading").innerText =
-      "Impossible de charger les données";
+    console.error(err);
+    document.getElementById("loading").innerText = "Impossible de charger les données";
   });
 
-/* =========================
-   CHANGE DATES
-========================= */
+// Changer dates
 document.getElementById("change-dates").onclick = () => {
   localStorage.removeItem("startDate");
   localStorage.removeItem("endDate");
