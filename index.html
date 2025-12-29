@@ -31,13 +31,13 @@
       will-change: transform;
     }
 
-    /* ===================== OVERLAY IMAGE ===================== */
+    /* ===================== OVERLAY ===================== */
     .overlay-wrapper {
       z-index: 4;
       pointer-events: none;
       opacity: 0;
-      animation: overlayFadeIn 1.4s ease forwards;
-      animation-delay: 1.2s;
+      animation: overlayFadeIn 1.3s ease forwards;
+      animation-delay: 1.1s;
     }
 
     .hero img.overlay {
@@ -72,6 +72,7 @@
     /* ===================== TITRE ===================== */
     .hero-title-wrapper {
       z-index: 2;
+      overflow: visible;
     }
 
     .hero-title {
@@ -108,7 +109,7 @@
     /* ===================== SUBTITLE ===================== */
     .hero-subtitle {
       margin-top: 32px;
-      font-size: clamp(0.9rem, 1.6vw, 1.5rem);
+      font-size: clamp(1rem, 1.6vw, 1.5rem);
       font-weight: 300;
       color: #000;
       letter-spacing: 0.12em;
@@ -116,6 +117,7 @@
       opacity: 0;
       animation: fadeSubtitle 0.8s ease forwards;
       animation-delay: 0.9s;
+      max-width: 90%;
     }
 
     @keyframes fadeSubtitle {
@@ -125,12 +127,12 @@
     /* ===================== DATES ===================== */
     .dates-section {
       position: relative;
-      margin-top: -60px;
+      margin-top: -60px; /* moins de recouvrement */
       padding: 90px 20px 80px;
       background: #ff4632;
       color: #fff;
       text-align: center;
-      border-radius: 48px 48px 0 0;
+      border-radius: 40px 40px 0 0;
       z-index: 6;
       will-change: transform;
     }
@@ -172,19 +174,21 @@
       }
 
       .hero-title {
-        left: 8%;
         top: 18%;
+        left: 6%;
+        transform: translateY(0); /* PAS de -50% en mobile */
         text-align: left;
+
         font-size: clamp(6rem, 18vw, 8rem);
         line-height: 0.85;
-        max-width: 90%;
+        max-width: 88%;
       }
 
       .hero-subtitle {
-        letter-spacing: 0.1em;
         font-size: 1rem;
         margin-top: 24px;
-        max-width: 85%;
+        letter-spacing: 0.1em;
+        max-width: 90%;
       }
 
       .dates-section {
@@ -248,13 +252,13 @@
       endInput.min = startInput.value;
     });
 
-    /* ===== PARALLAX ===== */
+    /* ===== PARALLAX MAGAZINE ===== */
     window.addEventListener("scroll", () => {
       const y = window.scrollY;
 
       titleWrapper.style.transform = `translateY(${y * 0.18}px)`;
       overlayWrapper.style.transform = `translateY(${-y * 0.12}px)`;
-      datesSection.style.transform = `translateY(${-y * 0.08}px)`;
+      datesSection.style.transform = `translateY(${-y * 0.05}px)`;
     });
 
     document.getElementById("generate-btn").onclick = () => {
