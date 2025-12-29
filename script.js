@@ -65,6 +65,17 @@ function buildGrid() {
       card.style.backgroundImage = `url(${IMAGE_BASE_URL}${reco.background})`;
     }
 
+    // OVERLAY pour lisibilité du texte
+    const overlay = document.createElement("div");
+    overlay.style.position = "absolute";
+    overlay.style.top = 0;
+    overlay.style.left = 0;
+    overlay.style.width = "100%";
+    overlay.style.height = "100%";
+    overlay.style.backgroundColor = "transparent";
+    overlay.style.transition = "background-color 0.4s ease, opacity 0.4s ease";
+    card.appendChild(overlay);
+
     // TAGS
     const tags = document.createElement("div");
     tags.className = "card-tags";
@@ -104,17 +115,29 @@ function buildGrid() {
     content.appendChild(p);
     card.appendChild(content);
 
-    // INTERACTIONS
+    // ================= INTERACTIONS =================
     let clickedOnce = false;
     function activateCard() {
+      overlay.style.backgroundColor = reco.color ? `#${reco.color}` : "#ff3b3b";
+      overlay.style.opacity = 0.9;
+
+      h3.style.color = reco.color_secondary ? `#${reco.color_secondary}` : "#fff";
+      p.style.color = reco.color_secondary ? `#${reco.color_secondary}` : "#fff";
+
       arrow.style.opacity = 1;
       arrow.style.transform = "translateX(0)";
     }
+
     function resetCard() {
+      overlay.style.backgroundColor = "transparent";
+      overlay.style.opacity = 0;
+      h3.style.color = "";
+      p.style.color = "";
       arrow.style.opacity = 0;
       arrow.style.transform = "translateX(10px)";
     }
 
+    // hover desktop
     card.addEventListener("mouseenter", () => {
       if (window.innerWidth > 768) activateCard();
     });
@@ -123,18 +146,21 @@ function buildGrid() {
       if (window.innerWidth > 768) resetCard();
     });
 
+    // click mobile
     card.addEventListener("click", () => {
-      if (window.innerWidth <= 768 && !clickedOnce) {
-        activateCard();
-        clickedOnce = true;
-        return;
+      if (window.innerWidth <= 768) {
+        if (!clickedOnce) {
+          activateCard();
+          clickedOnce = true;
+          return;
+        }
       }
       if (reco.URL) window.open(reco.URL, "_blank");
     });
 
     grid.appendChild(card);
 
-    // FADE-IN SIMPLE
+    // ================= FADE-IN =================
     setTimeout(() => {
       card.classList.add("visible");
     }, index * 120);
