@@ -1,209 +1,95 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Détails — Adele in Paris</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;900&display=swap" rel="stylesheet">
-
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Sora', sans-serif; background: #fff; color: #111; }
-
-    /* ===== HERO ===== */
-    .hero {
-      position: relative;
-      width: 100%;
-      height: 100vh;
-      overflow: hidden;
-    }
-
-    .hero img.desktop, .hero img.mobile {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: 0;
-    }
-
-    .hero img.desktop { display: block; }
-    .hero img.mobile { display: none; }
-    @media(max-width:768px){
-      .hero img.desktop { display: none; }
-      .hero img.mobile { display: block; }
-    }
-
-    .hero .text {
-      position: absolute;
-      color: inherit;
-      z-index: 2;
-      text-align: center;
-      width: 100%;
-      opacity: 0;
-      transition: opacity 0.8s ease;
-    }
-
-    .hero .text h1 {
-      font-size: clamp(4rem, 8vw, 8rem);
-      font-weight: 900;
-    }
-
-    .hero .text h2 {
-      font-size: clamp(1.5rem, 3vw, 2rem);
-      font-weight: 400;
-      margin-top: 0.5em;
-    }
-
-    /* Desktop center vertically */
-    @media(min-width:769px){
-      .hero .text { top: 50%; transform: translateY(-50%); text-align: center; }
-    }
-
-    /* Mobile bottom left */
-    @media(max-width:768px){
-      .hero .text { bottom: 20px; left: 20px; text-align: left; transform: none; }
-    }
-
-    /* ===== SECTION DETAIL ===== */
-    .detail-section {
-      padding: 40px 20px;
-    }
-
-    .detail-section h3 { font-weight: 600; margin-bottom: 10px; }
-    .detail-section p { white-space: pre-line; line-height: 1.6; margin-bottom: 20px; }
-
-    .info-block { margin-bottom: 20px; }
-    .info-block span { display: block; }
-
-    /* ===== GALERIE ===== */
-    .gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 16px;
-      margin-bottom: 40px;
-    }
-
-    .gallery img {
-      width: 100%;
-      border-radius: 12px;
-      object-fit: cover;
-    }
-
-    /* ===== BOUTONS ===== */
-    .go-button {
-      position: sticky;
-      bottom: 20px;
-      display: block;
-      width: 90%;
-      max-width: 300px;
-      margin: 0 auto 20px auto;
-      padding: 14px;
-      font-size: 1rem;
-      font-weight: 600;
-      text-align: center;
-      background-color: #000;
-      color: #fff;
-      border: none;
-      border-radius: 999px;
-      cursor: pointer;
-      text-decoration: none;
-    }
-
-    .back-button {
-      position: fixed;
-      top: 20px;
-      left: 20px;
-      font-size: 2rem;
-      text-decoration: none;
-      color: #000;
-      font-weight: bold;
-      z-index: 10;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Détail — Adele in Paris</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&display=swap');
+  body {margin:0;padding:0;font-family:'Sora',sans-serif; background:#fff; color:#111;}
+  .hero {position:relative;width:100%;height:100vh;overflow:hidden;}
+  .hero img {position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;}
+  .hero-content {position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;}
+  .hero-content h1 {font-size:4rem;margin-bottom:10px;}
+  .hero-content p {font-size:2rem;}
+  @media (max-width:768px){
+    .hero-content {top:auto; bottom:20px; left:20px; transform:none; text-align:left;}
+    .hero-content h1{font-size:2rem;}
+    .hero-content p{font-size:1.2rem;}
+  }
+  .section {padding:40px; border-radius:12px; margin:20px;}
+  .section h2 {margin-bottom:16px;}
+  .gallery img{border-radius:12px;margin:8px 0;width:100%;height:auto;display:block;}
+  #go-btn {position:fixed;bottom:20px;right:20px;padding:12px 24px;background:#000;color:#fff;border:none;border-radius:24px;font-size:1rem;cursor:pointer;z-index:10;}
+  #back-btn {position:fixed;top:20px;left:20px;font-size:2rem;cursor:pointer;z-index:10;color:#000;}
+</style>
 </head>
 <body>
 
-  <a href="generate.html" class="back-button">&#8592;</a>
+<div id="back-btn">&#8592;</div>
 
-  <section class="hero">
-    <img class="desktop" src="" alt="hero desktop">
-    <img class="mobile" src="" alt="hero mobile">
-    <div class="text">
-      <h1></h1>
-      <h2></h2>
-    </div>
-  </section>
+<section class="hero">
+  <img id="hero-img" src="" alt="">
+  <div class="hero-content">
+    <h1 id="hero-title"></h1>
+    <p id="hero-subtitle"></p>
+  </div>
+</section>
 
-  <section class="detail-section">
-    <div class="description">
-      <p></p>
-    </div>
-    <div class="info-block">
-      <h3>Infos</h3>
-      <span class="dates"></span>
-      <span class="prix"></span>
-      <span class="lieu"></span>
-    </div>
-    <div class="gallery"></div>
-    <a class="go-button" href="" target="_blank">GO</a>
-  </section>
+<section class="section" id="detail-section">
+  <div id="description"></div>
+  <div id="infos"></div>
+  <div class="gallery" id="gallery"></div>
+</section>
 
-  <script>
-    // récupérer les données depuis localStorage
-    const detailData = JSON.parse(localStorage.getItem("detailData"));
+<button id="go-btn">GO</button>
 
-    if(!detailData){
-      document.body.innerHTML = "<p>Impossible de charger la reco.</p>";
-    } else {
-      // hero images
-      document.querySelector(".hero img.desktop").src = detailData.fullscreen || "";
-      document.querySelector(".hero img.mobile").src = detailData.background || "";
+<script>
+const data = JSON.parse(localStorage.getItem("detailData")||"{}");
+if(!data.title){ alert("Impossible de charger la reco"); }
 
-      // text
-      const h1 = document.querySelector(".hero .text h1");
-      const h2 = document.querySelector(".hero .text h2");
-      h1.innerText = detailData.title || "";
-      h2.innerText = detailData.subtitle || "";
-      setTimeout(()=> document.querySelector(".hero .text").style.opacity = 1, 500);
+const heroImg = document.getElementById("hero-img");
+const heroTitle = document.getElementById("hero-title");
+const heroSubtitle = document.getElementById("hero-subtitle");
+const descDiv = document.getElementById("description");
+const infosDiv = document.getElementById("infos");
+const galleryDiv = document.getElementById("gallery");
 
-      // description
-      document.querySelector(".description p").innerText = detailData.description || "";
+heroImg.src = window.innerWidth>768 ? (data.fullscreen||"") : (data.background||"");
+heroTitle.innerText = data.title||"";
+heroSubtitle.innerText = data.subtitle||"";
 
-      // format dates
-      function formatDate(d){
-        if(!d) return "";
-        const date = new Date(d);
-        if(isNaN(date)) return "";
-        return date.toLocaleDateString("fr-FR", {day:"2-digit", month:"long", year:"numeric"});
-      }
-      const dates = document.querySelector(".dates");
-      dates.innerText = `${formatDate(detailData.start_date)} au ${formatDate(detailData.end_date)}`;
+descDiv.innerHTML = (data.description||"").replace(/\n/g,"<br>").replace(/,/g,", ");
 
-      // prix
-      document.querySelector(".prix").innerText = detailData.prix || "";
+const startDate = data.start_date ? new Date(data.start_date) : null;
+const endDate = data.end_date ? new Date(data.end_date) : null;
+function formatDate(d){
+  if(!d) return "";
+  return d.getDate()+" "+d.toLocaleString("fr-FR",{month:"long"})+" "+d.getFullYear();
+}
 
-      // lieu
-      document.querySelector(".lieu").innerText = detailData.lieu || "";
+infosDiv.innerHTML = `<h2>Infos</h2>
+<p>${startDate?formatDate(startDate):""} au ${endDate?formatDate(endDate):""}</p>
+<p>Prix : ${data.prix||""}</p>
+<p>Lieu : ${data.lieu||""}</p>`;
 
-      // galerie
-      const galleryDiv = document.querySelector(".gallery");
-      const photos = [];
-      for(let i=1;i<=5;i++){
-        if(detailData["photo"+i]) photos.push(detailData["photo"+i]);
-      }
-      photos.forEach(p=>{
-        const img = document.createElement("img");
-        img.src = "photos/"+p;
-        galleryDiv.appendChild(img);
-      });
+// Galerie
+galleryDiv.innerHTML="";
+for(let i=1;i<=5;i++){
+  if(data["photo"+i]) {
+    const img = document.createElement("img");
+    img.src="photos/"+data["photo"+i];
+    galleryDiv.appendChild(img);
+  }
+}
 
-      // bouton GO
-      const goBtn = document.querySelector(".go-button");
-      goBtn.href = detailData.URL || "#";
-    }
-  </script>
+// GO button
+document.getElementById("go-btn").onclick = ()=>{
+  if(data.URL) window.open(data.URL,"_blank");
+};
 
+// Back button
+document.getElementById("back-btn").onclick = ()=>window.history.back();
+</script>
 </body>
 </html>
