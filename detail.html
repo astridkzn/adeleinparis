@@ -1,95 +1,132 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<title>Détail — Adele in Paris</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&display=swap');
-  body {margin:0;padding:0;font-family:'Sora',sans-serif; background:#fff; color:#111;}
-  .hero {position:relative;width:100%;height:100vh;overflow:hidden;}
-  .hero img {position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;}
-  .hero-content {position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;}
-  .hero-content h1 {font-size:4rem;margin-bottom:10px;}
-  .hero-content p {font-size:2rem;}
-  @media (max-width:768px){
-    .hero-content {top:auto; bottom:20px; left:20px; transform:none; text-align:left;}
-    .hero-content h1{font-size:2rem;}
-    .hero-content p{font-size:1.2rem;}
-  }
-  .section {padding:40px; border-radius:12px; margin:20px;}
-  .section h2 {margin-bottom:16px;}
-  .gallery img{border-radius:12px;margin:8px 0;width:100%;height:auto;display:block;}
-  #go-btn {position:fixed;bottom:20px;right:20px;padding:12px 24px;background:#000;color:#fff;border:none;border-radius:24px;font-size:1rem;cursor:pointer;z-index:10;}
-  #back-btn {position:fixed;top:20px;left:20px;font-size:2rem;cursor:pointer;z-index:10;color:#000;}
-</style>
+  <meta charset="UTF-8">
+  <title>Détail — Adele in Paris</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&display=swap');
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Sora', sans-serif; background: #fff; color: #111; scroll-behavior: smooth; }
+
+    /* ===== HERO ===== */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      padding: 0 20px;
+    }
+
+    .hero img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      color: #fff;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.8s ease;
+    }
+
+    .hero-content.visible { opacity: 1; transform: translateY(0); }
+
+    .hero-content h1 { font-size: clamp(3rem,8vw,5rem); margin-bottom: 1rem; }
+    .hero-content p { font-size: clamp(1.2rem,2.5vw,2rem); }
+
+    /* ===== SECTION DETAIL ===== */
+    .section {
+      padding: 40px 20px;
+      width: 100%;
+    }
+
+    .description { white-space: pre-line; margin-bottom: 24px; }
+    .infos { margin-bottom: 24px; font-weight: 600; }
+    .infos div { margin-bottom: 4px; }
+
+    .gallery {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .gallery img {
+      border-radius: 12px;
+      width: calc(33% - 8px);
+      object-fit: cover;
+    }
+
+    /* ===== BOUTONS ===== */
+    .sticky-go {
+      position: sticky;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #000;
+      color: #fff;
+      border: none;
+      border-radius: 999px;
+      padding: 12px 30px;
+      font-weight: 600;
+      cursor: pointer;
+      z-index: 10;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+
+    .back-btn {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 20;
+      font-size: 2rem;
+      font-weight: bold;
+      text-decoration: none;
+      color: #fff;
+    }
+
+    @media (max-width:768px){
+      .gallery img { width: calc(50% - 6px); }
+      .hero-content h1 { font-size: clamp(2.5rem,10vw,4rem); }
+      .hero-content p { font-size: clamp(1rem,4vw,1.5rem); }
+    }
+
+  </style>
 </head>
 <body>
 
-<div id="back-btn">&#8592;</div>
+  <a href="generate.html" class="back-btn">&#8592;</a>
 
-<section class="hero">
-  <img id="hero-img" src="" alt="">
-  <div class="hero-content">
-    <h1 id="hero-title"></h1>
-    <p id="hero-subtitle"></p>
-  </div>
-</section>
+  <!-- HERO -->
+  <section class="hero">
+    <img id="hero-img" src="" alt="Hero image">
+    <div class="hero-content" id="hero-content">
+      <h1 id="hero-title"></h1>
+      <p id="hero-subtitle"></p>
+    </div>
+  </section>
 
-<section class="section" id="detail-section">
-  <div id="description"></div>
-  <div id="infos"></div>
-  <div class="gallery" id="gallery"></div>
-</section>
+  <!-- SECTION DETAIL -->
+  <section class="section" id="detail-section">
+    <div class="description" id="description"></div>
+    <div class="infos" id="infos"></div>
+    <div class="gallery" id="gallery"></div>
+    <button class="sticky-go">GO</button>
+  </section>
 
-<button id="go-btn">GO</button>
-
-<script>
-const data = JSON.parse(localStorage.getItem("detailData")||"{}");
-if(!data.title){ alert("Impossible de charger la reco"); }
-
-const heroImg = document.getElementById("hero-img");
-const heroTitle = document.getElementById("hero-title");
-const heroSubtitle = document.getElementById("hero-subtitle");
-const descDiv = document.getElementById("description");
-const infosDiv = document.getElementById("infos");
-const galleryDiv = document.getElementById("gallery");
-
-heroImg.src = window.innerWidth>768 ? (data.fullscreen||"") : (data.background||"");
-heroTitle.innerText = data.title||"";
-heroSubtitle.innerText = data.subtitle||"";
-
-descDiv.innerHTML = (data.description||"").replace(/\n/g,"<br>").replace(/,/g,", ");
-
-const startDate = data.start_date ? new Date(data.start_date) : null;
-const endDate = data.end_date ? new Date(data.end_date) : null;
-function formatDate(d){
-  if(!d) return "";
-  return d.getDate()+" "+d.toLocaleString("fr-FR",{month:"long"})+" "+d.getFullYear();
-}
-
-infosDiv.innerHTML = `<h2>Infos</h2>
-<p>${startDate?formatDate(startDate):""} au ${endDate?formatDate(endDate):""}</p>
-<p>Prix : ${data.prix||""}</p>
-<p>Lieu : ${data.lieu||""}</p>`;
-
-// Galerie
-galleryDiv.innerHTML="";
-for(let i=1;i<=5;i++){
-  if(data["photo"+i]) {
-    const img = document.createElement("img");
-    img.src="photos/"+data["photo"+i];
-    galleryDiv.appendChild(img);
-  }
-}
-
-// GO button
-document.getElementById("go-btn").onclick = ()=>{
-  if(data.URL) window.open(data.URL,"_blank");
-};
-
-// Back button
-document.getElementById("back-btn").onclick = ()=>window.history.back();
-</script>
+  <script src="detail.js"></script>
 </body>
 </html>
