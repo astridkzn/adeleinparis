@@ -5,44 +5,162 @@
   <title>Adele in Paris</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
+    /* ===== RESET ===== */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-      background: #000;
+      font-family: 'Montserrat', sans-serif;
+      background: #fff;
+      color: #000;
+      overflow-x: hidden;
+    }
+
+    /* ===== HERO SECTION ===== */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      background: #fff;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 10vw, 6rem);
+      font-weight: 900;
+      color: #ff3b3b; /* couleur pop */
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      opacity: 0;
+      animation: fadeScale 1.5s ease forwards;
+    }
+
+    @keyframes fadeScale {
+      to { opacity: 1; transform: scale(1); }
+      from { opacity: 0; transform: scale(0.8); }
+    }
+
+    .hero img.overlay {
+      position: absolute;
+      width: clamp(200px, 40%, 600px);
+      height: auto;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      pointer-events: none;
+      transition: transform 0.2s ease-out;
+    }
+
+    /* ===== DATE PICKER SECTION ===== */
+    .dates-section {
+      padding: 60px 20px;
+      background: #ff3b3b; /* même couleur que titre */
       color: #fff;
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
-      height: 100vh;
       gap: 16px;
+      min-height: 300px;
     }
 
-    input, button {
+    .dates-section label {
+      font-size: 1.2rem;
+    }
+
+    .dates-section input {
       padding: 10px;
       font-size: 1rem;
+      margin: 0 5px;
+      border-radius: 6px;
+      border: none;
+      max-width: 200px;
+      text-align: center;
     }
 
-    button {
+    .dates-section input:focus {
+      outline: none;
+      box-shadow: 0 0 10px rgba(255,59,59,0.7);
+    }
+
+    .dates-section button {
+      padding: 12px 24px;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: none;
+      background: #fff;
+      color: #ff3b3b;
       cursor: pointer;
+      transition: transform 0.2s, background 0.2s;
+      margin-top: 10px;
+    }
+    .dates-section button:hover {
+      transform: scale(1.05);
+      background: #f0f0f0;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .dates-section {
+        padding: 40px 15px;
+      }
     }
   </style>
 </head>
 <body>
 
-  <h1>Adele in Paris</h1>
+  <!-- HERO -->
+  <section class="hero">
+    <h1>Adele in Paris</h1>
+    <img class="overlay" src="images/overlay.png" alt="Overlay PNG">
+  </section>
 
-  <label for="start-date">T'es dispo quand chacal :</label>
-  <input type="date" id="start-date">
-  <input type="date" id="end-date">
-
-  <button id="generate-btn">Générer la reco</button>
+  <!-- DATES PICKER -->
+  <section class="dates-section">
+    <label for="start-date">T'es dispo quand chacal :</label>
+    <div>
+      <input type="date" id="start-date">
+      <input type="date" id="end-date">
+    </div>
+    <button id="generate-btn">Générer la reco</button>
+  </section>
 
   <script>
+    const startInput = document.getElementById("start-date");
+    const endInput = document.getElementById("end-date");
+    const overlay = document.querySelector(".hero img.overlay");
+
+    // Pré-remplir start date avec aujourd'hui
+    const today = new Date().toISOString().split("T")[0];
+    startInput.value = today;
+    startInput.min = today;
+    endInput.min = today;
+
+    startInput.addEventListener("change", () => {
+      endInput.min = startInput.value;
+    });
+
+    // Parallax overlay
+    window.addEventListener("scroll", () => {
+      const scrollY = window.scrollY;
+      overlay.style.transform = `translate(-50%, calc(-50% + ${scrollY * 0.3}px))`;
+    });
+
     document.getElementById("generate-btn").onclick = () => {
-      const start = document.getElementById("start-date").value;
-      const end = document.getElementById("end-date").value;
+      const start = startInput.value;
+      const end = endInput.value;
+
+      if (!start || !end || start > end) {
+        alert("Merci de choisir un intervalle de dates valide");
+        return;
+      }
 
       localStorage.setItem("startDate", start);
       localStorage.setItem("endDate", end);
