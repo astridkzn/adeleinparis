@@ -11,12 +11,19 @@ function parseCSV(str) {
   lines.forEach(line => {
     const obj = {};
     let values = [];
-    let inQuotes = false;
     let current = "";
+    let inQuotes = false;
 
-    for (let char of line) {
+    for (let i = 0; i < line.length; i++) {
+      const char = line[i];
       if (char === '"') {
-        inQuotes = !inQuotes;
+        // Gère les guillemets imbriqués
+        if (inQuotes && line[i + 1] === '"') {
+          current += '"';
+          i++;
+        } else {
+          inQuotes = !inQuotes;
+        }
       } else if (char === "," && !inQuotes) {
         values.push(current);
         current = "";
@@ -27,7 +34,7 @@ function parseCSV(str) {
     values.push(current);
 
     headers.forEach((h, i) => {
-      obj[h] = values[i] ? values[i].replace(/^"|"$/g, "") : "";
+      obj[h] = values[i] ? values[i].trim().replace(/^"|"$/g, "") : "";
     });
 
     data.push(obj);
@@ -68,37 +75,18 @@ function buildGrid() {
 
     // Overlay pour hover
     const colorOverlay = document.createElement("div");
-    colorOverlay.style.position = "absolute";
-    colorOverlay.style.top = 0;
-    colorOverlay.style.left = 0;
-    colorOverlay.style.width = "100%";
-    colorOverlay.style.height = "100%";
-    colorOverlay.style.backgroundColor = "transparent";
-    colorOverlay.style.transition = "all 0.3s ease";
+    colorOverlay.className = "card-overlay";
     card.appendChild(colorOverlay);
 
-    // Content
-    const content = document.createElement("div");
-    content.className = "card-content";
-    content.style.position = "relative";
-    content.style.zIndex = "2";
-    content.style.color = "#fff";
-
-    const h3 = document.createElement("h3");
-    h3.innerText = reco.title || "";
-    const p = document.createElement("p");
-    p.innerText = reco.subtitle || "";
-
-    // Genre et warning
+    // Tags (genre + warning)
+    const tags = document.createElement("div");
+    tags.className = "card-tags";
     if (reco.genre) {
       const genre = document.createElement("p");
+      genre.className = "tag-genre";
       genre.innerText = reco.genre;
-      genre.style.fontWeight = "600";
-      genre.style.color = "#fff";
-      genre.style.margin = "0";
-      content.appendChild(genre);
+      tags.appendChild(genre);
 
-      // warning si end_date < 1 mois
       if (reco.end_date) {
         const today = new Date();
         const endDate = new Date(reco.end_date);
@@ -106,14 +94,21 @@ function buildGrid() {
         nextMonth.setMonth(today.getMonth() + 1);
         if (endDate <= nextMonth) {
           const warning = document.createElement("p");
+          warning.className = "tag-warning";
           warning.innerText = "Bientôt fini !";
-          warning.style.color = "#FFFF00";
-          warning.style.margin = "0";
-          content.appendChild(warning);
+          tags.appendChild(warning);
         }
       }
     }
+    card.appendChild(tags);
 
+    // Content (title + subtitle)
+    const content = document.createElement("div");
+    content.className = "card-content";
+    const h3 = document.createElement("h3");
+    h3.innerText = reco.title || "";
+    const p = document.createElement("p");
+    p.innerText = reco.subtitle || "";
     content.appendChild(h3);
     content.appendChild(p);
     card.appendChild(content);
@@ -139,7 +134,6 @@ function buildGrid() {
       if (window.innerWidth <= 768) {
         if (!clickedOnce) { activateCard(); clickedOnce = true; return; }
       }
-      // sauvegarde les infos de la reco pour la page détail
       localStorage.setItem("currentReco", JSON.stringify(reco));
       window.location.href = "detail.html";
     });
