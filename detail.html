@@ -4,18 +4,13 @@
   <meta charset="UTF-8">
   <title>Détails — Adele in Paris</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;900&display=swap" rel="stylesheet">
+
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;700&display=swap');
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Sora', sans-serif; background: #fff; color: #111; }
 
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Sora', sans-serif;
-      background: #fff;
-      color: #111;
-    }
-
-    /* HERO */
+    /* ===== HERO ===== */
     .hero {
       position: relative;
       width: 100%;
@@ -23,195 +18,192 @@
       overflow: hidden;
     }
 
-    .hero img {
+    .hero img.desktop, .hero img.mobile {
       position: absolute;
       top: 0;
       left: 0;
-      width: 100vw;
-      height: 100vh;
+      width: 100%;
+      height: 100%;
       object-fit: cover;
       z-index: 0;
     }
 
-    .hero .text {
-      position: absolute;
-      z-index: 2;
-      width: 100%;
-      text-align: center;
-      top: 50%;
-      transform: translateY(-50%);
-      color: #fff;
-      opacity: 0;
-      transition: opacity 1s ease;
+    .hero img.desktop { display: block; }
+    .hero img.mobile { display: none; }
+    @media(max-width:768px){
+      .hero img.desktop { display: none; }
+      .hero img.mobile { display: block; }
     }
 
-    /* Mobile adjustments */
-    @media (max-width: 768px) {
-      .hero .text {
-        top: auto;
-        bottom: 20px;
-        left: 16px;
-        text-align: left;
-        transform: translateY(0);
-        font-size: 1.5rem;
-      }
+    .hero .text {
+      position: absolute;
+      color: inherit;
+      z-index: 2;
+      text-align: center;
+      width: 100%;
+      opacity: 0;
+      transition: opacity 0.8s ease;
     }
 
     .hero .text h1 {
-      margin: 0;
-      font-size: 4rem;
-      font-weight: 700;
+      font-size: clamp(4rem, 8vw, 8rem);
+      font-weight: 900;
     }
 
-    .hero .text p {
-      margin: 8px 0 0 0;
-      font-size: 1.5rem;
+    .hero .text h2 {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 400;
+      margin-top: 0.5em;
     }
 
-    /* SECTION DETAILS */
-    .section {
+    /* Desktop center vertically */
+    @media(min-width:769px){
+      .hero .text { top: 50%; transform: translateY(-50%); text-align: center; }
+    }
+
+    /* Mobile bottom left */
+    @media(max-width:768px){
+      .hero .text { bottom: 20px; left: 20px; text-align: left; transform: none; }
+    }
+
+    /* ===== SECTION DETAIL ===== */
+    .detail-section {
       padding: 40px 20px;
     }
 
-    .description {
-      white-space: pre-line; /* conserve retours à la ligne */
-      margin-bottom: 20px;
-    }
+    .detail-section h3 { font-weight: 600; margin-bottom: 10px; }
+    .detail-section p { white-space: pre-line; line-height: 1.6; margin-bottom: 20px; }
 
-    .infos {
-      margin-bottom: 20px;
-    }
+    .info-block { margin-bottom: 20px; }
+    .info-block span { display: block; }
 
-    .infos p {
-      margin: 4px 0;
-    }
-
+    /* ===== GALERIE ===== */
     .gallery {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 12px;
+      gap: 16px;
+      margin-bottom: 40px;
     }
 
     .gallery img {
       width: 100%;
       border-radius: 12px;
+      object-fit: cover;
     }
 
-    /* BUTTONS */
-    .btn-go {
+    /* ===== BOUTONS ===== */
+    .go-button {
       position: sticky;
       bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      padding: 12px 24px;
-      font-size: 1.2rem;
-      border-radius: 50px;
-      border: none;
-      background: #000;
+      display: block;
+      width: 90%;
+      max-width: 300px;
+      margin: 0 auto 20px auto;
+      padding: 14px;
+      font-size: 1rem;
+      font-weight: 600;
+      text-align: center;
+      background-color: #000;
       color: #fff;
+      border: none;
+      border-radius: 999px;
       cursor: pointer;
-      z-index: 10;
+      text-decoration: none;
     }
 
-    .btn-back {
+    .back-button {
       position: fixed;
-      top: 16px;
-      left: 16px;
+      top: 20px;
+      left: 20px;
       font-size: 2rem;
-      cursor: pointer;
+      text-decoration: none;
+      color: #000;
+      font-weight: bold;
       z-index: 10;
-      background: none;
-      border: none;
-      color: #fff;
     }
   </style>
 </head>
-
 <body>
-  <button class="btn-back">&#8592;</button>
+
+  <a href="generate.html" class="back-button">&#8592;</a>
+
   <section class="hero">
-    <img class="desktop" src="" alt="Hero desktop">
-    <img class="mobile" src="" alt="Hero mobile">
+    <img class="desktop" src="" alt="hero desktop">
+    <img class="mobile" src="" alt="hero mobile">
     <div class="text">
-      <h1 id="title"></h1>
-      <p id="subtitle"></p>
+      <h1></h1>
+      <h2></h2>
     </div>
   </section>
 
-  <section class="section" id="details-section">
-    <div class="description" id="description"></div>
-    <div class="infos" id="infos"></div>
-    <div class="gallery" id="gallery"></div>
-    <button class="btn-go" id="btn-go">GO</button>
+  <section class="detail-section">
+    <div class="description">
+      <p></p>
+    </div>
+    <div class="info-block">
+      <h3>Infos</h3>
+      <span class="dates"></span>
+      <span class="prix"></span>
+      <span class="lieu"></span>
+    </div>
+    <div class="gallery"></div>
+    <a class="go-button" href="" target="_blank">GO</a>
   </section>
 
   <script>
-    const currentReco = JSON.parse(localStorage.getItem("currentReco") || "{}");
+    // récupérer les données depuis localStorage
+    const detailData = JSON.parse(localStorage.getItem("detailData"));
 
-    if (!currentReco.title) {
-      alert("Aucune reco trouvée !");
-      window.location.href = "generate.html";
-    }
+    if(!detailData){
+      document.body.innerHTML = "<p>Impossible de charger la reco.</p>";
+    } else {
+      // hero images
+      document.querySelector(".hero img.desktop").src = detailData.fullscreen || "";
+      document.querySelector(".hero img.mobile").src = detailData.background || "";
 
-    // Hero images
-    const desktopImg = document.querySelector(".hero img.desktop");
-    const mobileImg = document.querySelector(".hero img.mobile");
-    desktopImg.src = currentReco.fullscreen || currentReco.background || "";
-    mobileImg.src = currentReco.background || currentReco.fullscreen || "";
+      // text
+      const h1 = document.querySelector(".hero .text h1");
+      const h2 = document.querySelector(".hero .text h2");
+      h1.innerText = detailData.title || "";
+      h2.innerText = detailData.subtitle || "";
+      setTimeout(()=> document.querySelector(".hero .text").style.opacity = 1, 500);
 
-    // Text
-    const titleEl = document.getElementById("title");
-    const subtitleEl = document.getElementById("subtitle");
-    titleEl.innerText = currentReco.title || "";
-    subtitleEl.innerText = currentReco.subtitle || "";
+      // description
+      document.querySelector(".description p").innerText = detailData.description || "";
 
-    // Fade in text
-    setTimeout(() => {
-      document.querySelector(".hero .text").style.opacity = 1;
-    }, 300);
-
-    // Section colors
-    const section = document.getElementById("details-section");
-    section.style.backgroundColor = currentReco.color ? `#${currentReco.color}` : "#ff3b3b";
-    section.style.color = currentReco.color_secondary ? `#${currentReco.color_secondary}` : "#fff";
-
-    // Description
-    const descEl = document.getElementById("description");
-    descEl.innerText = currentReco.description || "";
-
-    // Infos
-    const infosEl = document.getElementById("infos");
-    const start = currentReco.start_date ? new Date(currentReco.start_date) : null;
-    const end = currentReco.end_date ? new Date(currentReco.end_date) : null;
-    let infosHTML = "";
-    if (start && end) {
-      const options = { day: '2-digit', month: 'long', year: 'numeric' };
-      infosHTML += `<p>Du ${start.toLocaleDateString('fr-FR', options)} au ${end.toLocaleDateString('fr-FR', options)}</p>`;
-    }
-    if (currentReco.prix) infosHTML += `<p>Prix : ${currentReco.prix}</p>`;
-    infosEl.innerHTML = infosHTML;
-
-    // Gallery
-    const galleryEl = document.getElementById("gallery");
-    for (let i = 1; i <= 10; i++) {
-      const photoKey = `photo${i}`;
-      if (currentReco[photoKey]) {
-        const img = document.createElement("img");
-        img.src = `photos/${currentReco[photoKey]}`;
-        galleryEl.appendChild(img);
+      // format dates
+      function formatDate(d){
+        if(!d) return "";
+        const date = new Date(d);
+        if(isNaN(date)) return "";
+        return date.toLocaleDateString("fr-FR", {day:"2-digit", month:"long", year:"numeric"});
       }
-    }
+      const dates = document.querySelector(".dates");
+      dates.innerText = `${formatDate(detailData.start_date)} au ${formatDate(detailData.end_date)}`;
 
-    // GO button
-    const btnGo = document.getElementById("btn-go");
-    btnGo.onclick = () => {
-      if (currentReco.URL) window.open(currentReco.URL, "_blank");
-    }
+      // prix
+      document.querySelector(".prix").innerText = detailData.prix || "";
 
-    // Back button
-    document.querySelector(".btn-back").onclick = () => {
-      window.history.back();
+      // lieu
+      document.querySelector(".lieu").innerText = detailData.lieu || "";
+
+      // galerie
+      const galleryDiv = document.querySelector(".gallery");
+      const photos = [];
+      for(let i=1;i<=5;i++){
+        if(detailData["photo"+i]) photos.push(detailData["photo"+i]);
+      }
+      photos.forEach(p=>{
+        const img = document.createElement("img");
+        img.src = "photos/"+p;
+        galleryDiv.appendChild(img);
+      });
+
+      // bouton GO
+      const goBtn = document.querySelector(".go-button");
+      goBtn.href = detailData.URL || "#";
     }
   </script>
+
 </body>
 </html>
