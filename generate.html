@@ -4,57 +4,59 @@
   <meta charset="UTF-8">
   <title>Generate — Adele in Paris</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="styles.css">
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Plus+Jakarta+Sans:wght@400;600&display=swap');
+
     body {
       margin: 0;
       padding: 0;
       font-family: 'Plus Jakarta Sans', sans-serif;
-      background: #fff;
-      overflow-x: hidden;
-    }
-
-    #loading {
-      text-align: center;
-      margin-top: 50px;
-      font-size: 1.5rem;
-      color: #000;
+      background: #fff; /* changement de noir à blanc */
+      color: #111;
+      position: relative;
+      min-height: 100vh;
     }
 
     #grid {
-      display: none;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 16px;
       padding: 16px;
+      padding-bottom: 80px; /* espace pour le bouton fixe */
     }
 
     .card {
       position: relative;
       height: 300px;
-      border-radius: 12px;
-      overflow: hidden;
       cursor: pointer;
-      transition: all 0.4s ease;
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
+      overflow: hidden;
+      border-radius: 12px;
       display: flex;
       align-items: flex-end;
-      padding: 12px;
+      justify-content: flex-start;
+      background-size: cover;
+      background-position: center;
+      transition: all 0.4s ease;
+    }
+
+    .card-content {
+      padding: 16px;
+      z-index: 2;
     }
 
     .card-content h3 {
-      margin: 0;
+      font-family: 'Montserrat', sans-serif;
       font-weight: 700;
       font-size: 1.5rem;
-      color: #fff;
+      margin: 0;
+      transition: color 0.4s ease;
     }
 
     .card-content p {
-      margin: 4px 0 0;
       font-weight: 400;
-      font-size: 1rem;
-      color: #fff;
+      font-size: 1.1rem;
+      margin: 4px 0 0 0;
+      transition: color 0.4s ease;
     }
 
     .arrow {
@@ -62,41 +64,44 @@
       top: 12px;
       right: 12px;
       width: 24px;
-      height: 24px;
-      border-top: 3px solid #fff;
-      border-right: 3px solid #fff;
-      transform: rotate(45deg);
+      height: 3px;
+      background-color: white;
       opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    .card.hovered .arrow {
-      opacity: 1;
+      transform: translateX(10px);
+      transition: all 0.3s ease;
+      z-index: 3;
     }
 
     #change-dates {
-      position: fixed;
-      bottom: 16px;
+      position: fixed; /* toujours visible */
+      bottom: 0;
       left: 50%;
       transform: translateX(-50%);
-      padding: 12px 24px;
+      margin: 0;
+      padding: 12px 20px;
       font-size: 1rem;
+      cursor: pointer;
+      background-color: #ff3b3b;
+      border: none;
       border-radius: 8px;
-      background-color: #000;
       color: #fff;
       z-index: 10;
-      box-shadow: 0 0 40px rgba(0,0,0,0.2);
-      cursor: pointer;
+      box-shadow: 0 -20px 30px -10px rgba(255,255,255,0.5); /* fade smooth */
     }
+
+    #loading {
+      text-align: center;
+      margin-top: 20px;
+    }
+
   </style>
 </head>
+
 <body>
+  <div id="loading">Chargement...</div>
+  <div id="grid"></div>
+  <button id="change-dates">Changer de dates</button>
 
-<div id="loading">Chargement...</div>
-<div id="grid"></div>
-
-<button id="change-dates">Changer de dates</button>
-
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
