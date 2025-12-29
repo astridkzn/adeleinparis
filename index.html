@@ -2,44 +2,36 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Adele in Paris</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #000;
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-    }
-
-    h1 {
-      font-size: 3rem;
-      margin-bottom: 2rem;
-    }
-
-    button {
-      padding: 1rem 2rem;
-      font-size: 1.2rem;
-      cursor: pointer;
-      background: #39ff14;
-      border: none;
-      border-radius: 5px;
-      color: #000;
-      transition: background 0.3s;
-    }
-
-    button:hover {
-      background: #2ecc11;
-    }
-  </style>
+  <title>Adele in Paris — Homepage</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
   <h1>Adele in Paris</h1>
-  <button onclick="location.href='generate.html'">Generate</button>
+
+  <label for="start-date">T'es dispo quand chacal :</label><br>
+  <input type="date" id="start-date">
+  <input type="date" id="end-date"><br><br>
+
+  <button id="generate-btn">Générer la reco</button>
+
+  <script>
+    document.getElementById("generate-btn").onclick = () => {
+      const start = document.getElementById("start-date").value;
+      const end = document.getElementById("end-date").value;
+
+      if (!start || !end) {
+        alert("Merci de choisir un intervalle de dates !");
+        return;
+      }
+
+      // Stocker les dates pour generate.html
+      localStorage.setItem("startDate", start);
+      localStorage.setItem("endDate", end);
+
+      // Redirection vers la page generate
+      window.location.href = "generate.html";
+    };
+  </script>
 </body>
 </html>
