@@ -6,15 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: 'Montserrat', sans-serif;
+    html, body {
+      height: 100%;
       overflow-x: hidden;
-      margin: 0;
-      padding: 0;
+      scroll-behavior: smooth;
+      font-family: 'Montserrat', sans-serif;
       background: #fff;
-      color: #000;
     }
 
     /* ===== HERO ===== */
@@ -22,55 +19,49 @@
       position: relative;
       width: 100%;
       height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
       overflow: hidden;
     }
 
-    /* Background */
-    .hero .bg {
+    .hero img.bg,
+    .hero img.overlay {
       position: absolute;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: contain; /* pas de zoom, image entière */
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover; /* full screen sans bandes blanches */
       z-index: 0;
     }
 
-    /* Overlay */
-    .hero .overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: contain; /* même taille que background */
-      z-index: 2; /* au-dessus du texte */
+    .hero img.overlay {
+      z-index: 2;
       pointer-events: none;
+      transition: transform 0.2s ease-out;
     }
 
+    /* Desktop / Mobile */
     .hero img.desktop { display: block; }
     .hero img.mobile { display: none; }
-
     @media (max-width: 768px) {
       .hero img.desktop { display: none; }
       .hero img.mobile { display: block; }
     }
 
-    /* TITRE */
+    /* ===== TITRE ===== */
     .hero h1 {
-      position: relative;
-      z-index: 1; /* en dessous de l’overlay */
-      font-size: clamp(5rem, 12vw, 12rem);
-      font-weight: 900;
-      color: #ff3b3b;
-      line-height: 0.8;
+      position: absolute;
+      top: 20%; /* remonte le titre */
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1;
       text-align: center;
+      color: #ff3b3b;
+      font-weight: 900;
+      line-height: 0.8;
+      font-size: clamp(8rem, 15vw, 20rem); /* taille x1.5 par rapport à avant */
       pointer-events: none;
       opacity: 0;
-      transform: translateY(80px);
+      transform: translate(-50%, 120px);
       animation: fadeSlideUp 1s forwards;
     }
 
@@ -80,10 +71,10 @@
     .hero h1 span:nth-child(3) { animation-delay: 0.8s; }
 
     @keyframes fadeSlideUp {
-      to { opacity: 1; transform: translateY(0); }
+      to { opacity: 1; transform: translate(-50%, 0); }
     }
 
-    /* SECTION DATES */
+    /* ===== SECTION DATES ===== */
     .dates-section {
       padding: 60px 20px;
       background: #ff3b3b;
@@ -166,6 +157,8 @@
   <script>
     const startInput = document.getElementById("start-date");
     const endInput = document.getElementById("end-date");
+    const overlayDesktop = document.querySelector(".overlay.desktop");
+    const overlayMobile = document.querySelector(".overlay.mobile");
 
     const today = new Date().toISOString().split("T")[0];
     startInput.value = today;
@@ -174,6 +167,13 @@
 
     startInput.addEventListener("change", () => {
       endInput.min = startInput.value;
+    });
+
+    // Parallax overlay
+    window.addEventListener("scroll", () => {
+      const scrollY = window.scrollY;
+      overlayDesktop.style.transform = `translateY(${scrollY * 0.2}px)`;
+      overlayMobile.style.transform = `translateY(${scrollY * 0.2}px)`;
     });
 
     document.getElementById("generate-btn").onclick = () => {
