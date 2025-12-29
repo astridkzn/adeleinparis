@@ -65,18 +65,12 @@ function buildGrid() {
       card.style.backgroundImage = `url(${IMAGE_BASE_URL}${reco.background})`;
     }
 
-    // OVERLAY pour lisibilité du texte
+    // Overlay pour hover / click
     const overlay = document.createElement("div");
-    overlay.style.position = "absolute";
-    overlay.style.top = 0;
-    overlay.style.left = 0;
-    overlay.style.width = "100%";
-    overlay.style.height = "100%";
-    overlay.style.backgroundColor = "transparent";
-    overlay.style.transition = "background-color 0.4s ease, opacity 0.4s ease";
+    overlay.className = "card-overlay";
     card.appendChild(overlay);
 
-    // TAGS
+    // Tags
     const tags = document.createElement("div");
     tags.className = "card-tags";
 
@@ -96,12 +90,12 @@ function buildGrid() {
 
     card.appendChild(tags);
 
-    // ARROW
+    // Arrow
     const arrow = document.createElement("div");
     arrow.className = "arrow";
     card.appendChild(arrow);
 
-    // CONTENT
+    // Content
     const content = document.createElement("div");
     content.className = "card-content";
 
@@ -119,7 +113,7 @@ function buildGrid() {
     let clickedOnce = false;
     function activateCard() {
       overlay.style.backgroundColor = reco.color ? `#${reco.color}` : "#ff3b3b";
-      overlay.style.opacity = 0.9;
+      overlay.style.opacity = 1; // full opacity
 
       h3.style.color = reco.color_secondary ? `#${reco.color_secondary}` : "#fff";
       p.style.color = reco.color_secondary ? `#${reco.color_secondary}` : "#fff";
