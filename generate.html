@@ -1,118 +1,152 @@
-const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS-TXMdmEEJopZfjsiTYrj2mVSf7g8srJ82XOsdumjArTMPIYhkEqBaMuICXNMnP347qAd-5OFFeXAx/pub?output=csv";
-const IMAGE_BASE_URL = "https://raw.githubusercontent.com/astridkzn/adeleinparis/main/images/";
-let recos = [];
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Generate — Adele in Paris</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Plus+Jakarta+Sans:wght@400;600&display=swap');
 
-// CSV PARSER
-function parseCSV(str) {
-  const lines = str.trim().split("\n");
-  const headers = lines.shift().split(",").map(h => h.trim());
-  return lines.map(line => {
-    const values = line.split(",").map(v => v.trim());
-    const obj = {};
-    headers.forEach((h,i)=> obj[h]=values[i] || "");
-    return obj;
-  });
-}
-
-// FILTER BY DATES
-function filterByDates(data) {
-  const startFilter = localStorage.getItem("startDate");
-  const endFilter = localStorage.getItem("endDate");
-  if(!startFilter || !endFilter) return data;
-
-  const startDate = new Date(startFilter);
-  const endDate = new Date(endFilter);
-
-  return data.filter(r => {
-    if(!r.start_date || !r.end_date) return false;
-    const recoStart = new Date(r.start_date);
-    const recoEnd = new Date(r.end_date);
-    return recoStart <= endDate && recoEnd >= startDate;
-  });
-}
-
-// BUILD GRID
-function buildGrid() {
-  const grid = document.getElementById("grid");
-  grid.innerHTML = "";
-
-  recos.forEach((reco, index) => {
-    const card = document.createElement("div");
-    card.className = "card";
-    card.style.backgroundImage = reco.background ? `url(${IMAGE_BASE_URL}${reco.background})` : "";
-    card.style.backgroundSize = "cover";
-    card.style.backgroundPosition = "center";
-
-    // Overlay couleur
-    const overlay = document.createElement("div");
-    overlay.style.position = "absolute";
-    overlay.style.top=0;
-    overlay.style.left=0;
-    overlay.style.width="100%";
-    overlay.style.height="100%";
-    overlay.style.backgroundColor="transparent";
-    overlay.style.transition="all 0.3s ease";
-    card.appendChild(overlay);
-
-    // Content
-    const content = document.createElement("div");
-    content.className = "card-content";
-    const h3 = document.createElement("h3");
-    h3.innerText = reco.title || "";
-    const p = document.createElement("p");
-    p.innerText = reco.subtitle || "";
-    if(reco.color_secondary){
-      h3.style.color = `#${reco.color_secondary}`;
-      p.style.color = `#${reco.color_secondary}`;
-    } else {
-      h3.style.color = "#fff";
-      p.style.color = "#fff";
-    }
-    content.appendChild(h3);
-    content.appendChild(p);
-    card.appendChild(content);
-
-    // Hover / click effect
-    function activateCard() {
-      overlay.style.backgroundColor = reco.color ? `#${reco.color}` : "#ff3b3b";
-      overlay.style.opacity = "1"; // 100% opacity
-      h3.style.color = reco.color_secondary ? `#${reco.color_secondary}` : "#fff";
-      p.style.color = reco.color_secondary ? `#${reco.color_secondary}` : "#fff";
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: #fff;
+      color: #fff;
+      position: relative;
+      min-height: 100vh;
     }
 
-    card.addEventListener("mouseenter",()=> { if(window.innerWidth>768) activateCard(); });
-    card.addEventListener("mouseleave",()=> { if(window.innerWidth>768){
-      overlay.style.backgroundColor="transparent";
-      overlay.style.opacity="0";
-      h3.style.color = reco.color_secondary ? `#${reco.color_secondary}` : "#fff";
-      p.style.color = reco.color_secondary ? `#${reco.color_secondary}` : "#fff";
-    }});
+    #grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+      padding: 16px;
+      padding-bottom: 120px; /* espace pour le bouton */
+    }
 
-    card.addEventListener("click", () => {
-      if(window.innerWidth<=768) { activateCard(); }
-      // Stocke l'index et redirige vers detail
-      localStorage.setItem("selectedRecoIndex", index);
-      window.location.href = "detail.html";
-    });
+    .card {
+      position: relative;
+      height: 300px;
+      cursor: pointer;
+      overflow: hidden;
+      border-radius: 12px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-start;
+      background-size: cover;
+      background-position: center;
+      transition: all 0.4s ease;
+      opacity: 0;
+      transform: translateY(20px);
+    }
 
-    grid.appendChild(card);
-  });
-}
+    .card.visible {
+      opacity: 1;
+      transform: translateY(0);
+      transition: all 0.5s ease;
+    }
 
-// FETCH & INIT
-fetch(sheetURL)
-  .then(res => res.text())
-  .then(csv => {
-    recos = parseCSV(csv);
-    recos = filterByDates(recos);
-    if(recos.length===0) document.getElementById("loading").innerText = "Aucune reco disponible";
-    else buildGrid();
-  })
-  .catch(err => console.error(err));
+    .card-content {
+      padding: 16px;
+      z-index: 2;
+    }
 
-// CHANGE DATES
-document.getElementById("change-dates").onclick = () => {
-  localStorage.removeItem("startDate");
-  localStorage.removeItem("endDate");
-  window.location.href = "index.html";
-};
+    .card-content h3 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 1.5rem;
+      margin: 0;
+      color: #fff;
+      transition: color 0.4s ease;
+    }
+
+    .card-content p {
+      font-weight: 400;
+      font-size: 1.1rem;
+      margin: 4px 0 0 0;
+      color: #fff;
+      transition: color 0.4s ease;
+    }
+
+    .arrow {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 24px;
+      height: 3px;
+      background-color: white;
+      opacity: 0;
+      transform: translateX(10px);
+      transition: all 0.3s ease;
+      z-index: 3;
+    }
+
+    .card-tags {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .tag-genre {
+      font-size: 0.9rem;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .tag-warning {
+      font-size: 0.9rem;
+      color: #FFFF00;
+      font-weight: 600;
+    }
+
+    /* Overlay pour lisibilité */
+    .card-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: transparent;
+      transition: background-color 0.3s ease;
+      z-index: 1;
+    }
+
+    #change-dates {
+      position: fixed;
+      bottom: 20px; /* remonté */
+      left: 50%;
+      transform: translateX(-50%);
+      margin: 0;
+      padding: 12px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      background-color: #000;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      z-index: 10;
+      box-shadow: 0 -5px 20px rgba(0,0,0,0.3);
+    }
+
+    #loading {
+      text-align: center;
+      margin-top: 20px;
+      color: #111;
+    }
+
+  </style>
+</head>
+
+<body>
+  <div id="loading">Chargement...</div>
+  <div id="grid"></div>
+  <button id="change-dates">Changer de dates</button>
+
+  <script src="script.js"></script>
+</body>
+</html>
