@@ -27,28 +27,47 @@
       justify-content: center;
       align-items: center;
       text-align: center;
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
+      overflow: hidden;
     }
 
-    /* Background responsive */
-    .hero {
-      background-image: url('images/fond_desktop.png');
+    /* Background image full screen */
+    .hero .bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
     }
+
+    /* Overlay images */
+    .hero img.overlay {
+      position: absolute;
+      width: clamp(600px, 45%, 1200px);
+      height: auto;
+      bottom: 0;
+      right: 0;
+      z-index: 2;
+      pointer-events: none;
+      transition: transform 0.2s ease-out;
+    }
+
+    .hero img.overlay.desktop { display: block; }
+    .hero img.overlay.mobile { display: none; }
     @media (max-width: 768px) {
-      .hero {
-        background-image: url('images/fond.png');
-      }
+      .hero img.overlay.desktop { display: none; }
+      .hero img.overlay.mobile { display: block; }
     }
 
     /* ===== TITRE ===== */
     .hero h1 {
+      position: relative;
+      z-index: 3;
       font-size: clamp(5rem, 12vw, 12rem);
       font-weight: 900;
       color: #ff3b3b;
       line-height: 0.8;
-      z-index: 3;
       pointer-events: none;
       opacity: 0;
       transform: translateY(80px);
@@ -65,26 +84,6 @@
 
     @keyframes fadeSlideUp {
       to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ===== OVERLAY ===== */
-    .hero img.overlay {
-      position: absolute;
-      width: clamp(600px, 45%, 1200px);
-      height: auto;
-      bottom: 0;
-      right: 0;
-      z-index: 2;
-      pointer-events: none;
-      transition: transform 0.2s ease-out;
-    }
-
-    /* Overlay responsive */
-    .hero img.overlay.desktop { display: block; }
-    .hero img.overlay.mobile { display: none; }
-    @media (max-width: 768px) {
-      .hero img.overlay.desktop { display: none; }
-      .hero img.overlay.mobile { display: block; }
     }
 
     /* ===== SECTION DATES ===== */
@@ -135,20 +134,26 @@
       transform: scale(1.05);
       background: #f0f0f0;
     }
-
   </style>
 </head>
 <body>
 
   <!-- HERO -->
   <section class="hero">
+    <!-- Background -->
+    <img class="bg desktop" src="images/fond_desktop.png" alt="Background desktop">
+    <img class="bg mobile" src="images/fond.png" alt="Background mobile">
+
+    <!-- Overlay -->
+    <img class="overlay desktop" src="images/Adele_desktop.png" alt="Overlay desktop">
+    <img class="overlay mobile" src="images/Adele.png" alt="Overlay mobile">
+
+    <!-- TITRE -->
     <h1>
       <span>Adele</span>
       <span>in</span>
       <span>Paris</span>
     </h1>
-    <img class="overlay desktop" src="images/Adele_desktop.png" alt="Overlay desktop">
-    <img class="overlay mobile" src="images/Adele.png" alt="Overlay mobile">
   </section>
 
   <!-- DATES PICKER -->
@@ -167,7 +172,6 @@
     const overlayDesktop = document.querySelector(".overlay.desktop");
     const overlayMobile = document.querySelector(".overlay.mobile");
 
-    // Dates min / default
     const today = new Date().toISOString().split("T")[0];
     startInput.value = today;
     startInput.min = today;
@@ -199,6 +203,5 @@
       window.location.href = "generate.html";
     };
   </script>
-
 </body>
 </html>
