@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Détail — Adele in Paris</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&display=swap');
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Sora', sans-serif; background: #fff; color: #111; scroll-behavior: smooth; }
+
+    a.back-btn {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 20;
+      font-size: 2rem;
+      font-weight: bold;
+      text-decoration: none;
+      color: #fff;
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 20px;
+    }
+
+    .hero img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      color: #fff;
+      opacity: 0;
+      transition: all 0.8s ease;
+    }
+
+    .hero-content.visible { opacity: 1; }
+
+    .hero-content h1 { font-size: clamp(3rem,8vw,5rem); margin-bottom: 1rem; }
+    .hero-content p { font-size: clamp(1.2rem,2.5vw,2rem); }
+
+    /* ===== SECTION DETAIL ===== */
+    .section {
+      padding: 40px 20px;
+      width: 100%;
+    }
+
+    .description { white-space: pre-line; margin-bottom: 24px; }
+    .infos { margin-bottom: 24px; font-weight: 600; }
+    .infos div { margin-bottom: 4px; }
+
+    .gallery {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .gallery img {
+      border-radius: 12px;
+      width: calc(33% - 8px);
+      object-fit: cover;
+    }
+
+    /* ===== BOUTONS ===== */
+    .sticky-go {
+      position: sticky;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #000;
+      color: #fff;
+      border: none;
+      border-radius: 999px;
+      padding: 12px 30px;
+      font-weight: 600;
+      cursor: pointer;
+      z-index: 10;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width:768px){
+      .hero {
+        align-items: flex-end;
+        justify-content: flex-start;
+        padding: 0 16px 40px 16px;
+      }
+
+      .hero-content {
+        text-align: left;
+      }
+
+      .hero-content h1 { font-size: clamp(2.5rem,10vw,4rem); margin-bottom: 0.5rem; }
+      .hero-content p { font-size: clamp(1rem,4vw,1.5rem); }
+      .gallery img { width: calc(50% - 6px); }
+    }
+  </style>
+</head>
+<body>
+
+  <a href="generate.html" class="back-btn">&#8592;</a>
+
+  <!-- HERO -->
+  <section class="hero">
+    <img id="hero-img" src="" alt="Hero image">
+    <div class="hero-content" id="hero-content">
+      <h1 id="hero-title"></h1>
+      <p id="hero-subtitle"></p>
+    </div>
+  </section>
+
+  <!-- SECTION DETAIL -->
+  <section class="section" id="detail-section">
+    <div class="description" id="description"></div>
+    <div class="infos" id="infos"></div>
+    <div class="gallery" id="gallery"></div>
+    <button class="sticky-go">GO</button>
+  </section>
+
+  <script src="detail.js"></script>
+</body>
+</html>
