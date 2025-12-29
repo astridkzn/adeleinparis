@@ -8,6 +8,7 @@
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Sora', sans-serif; background: #fff; color: #111; overflow-x: hidden; }
+
   a { text-decoration: none; }
 
   /* ===== HERO ===== */
@@ -17,76 +18,50 @@
     height: 100vh;
     overflow: hidden;
   }
-  .hero img {
-    position: absolute;
+
+  .hero.fixed-hero {
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
+    height: 100vh;
+    z-index: -1;
+  }
+
+  .hero img {
+    width: 100%;
     height: 100%;
     object-fit: cover;
+    display: block;
   }
+
   .hero-content {
     position: absolute;
     z-index: 2;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     text-align: center;
     color: #fff;
     width: 100%;
     opacity: 0;
-    transform: translateY(20px);
     animation: fadeSlideUp 1s forwards;
     animation-delay: 0.5s;
   }
+
   .hero-content h1 {
     font-size: clamp(3rem, 8vw, 6rem);
     font-weight: 800;
     margin-bottom: 1rem;
   }
+
   .hero-content p {
     font-size: clamp(1.2rem, 3vw, 2rem);
     font-weight: 400;
   }
+
   @keyframes fadeSlideUp {
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* ===== SECTION ===== */
-  .section {
-    padding: 40px 20px;
-  }
-  .description {
-    white-space: pre-wrap;
-    margin-bottom: 30px;
-  }
-  .infos {
-    margin-bottom: 30px;
-    line-height: 1.5;
-  }
-  .infos p { margin: 4px 0; }
-  .gallery {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 16px;
-  }
-  .gallery img {
-    width: 100%;
-    border-radius: 12px;
-    object-fit: cover;
-  }
-
-  /* ===== STICKY GO BUTTON ===== */
-  .go-btn {
-    position: sticky;
-    bottom: 20px;
-    display: inline-block;
-    background: #000;
-    color: #fff;
-    padding: 14px 24px;
-    border-radius: 50px;
-    font-weight: 600;
-    cursor: pointer;
-    text-align: center;
-    font-size: 1rem;
-    z-index: 10;
+    to { opacity: 1; transform: translate(-50%, -50%); }
   }
 
   /* ===== BACK BUTTON ===== */
@@ -107,23 +82,76 @@
     justify-content: center;
   }
 
+  /* ===== SECTION ===== */
+  .section {
+    position: relative;
+    padding: 40px 20px;
+    margin-top: 100vh; /* démarre après le hero */
+    z-index: 1;
+  }
+
+  .description {
+    white-space: pre-wrap;
+    margin-bottom: 30px;
+  }
+
+  .infos {
+    margin-bottom: 30px;
+    line-height: 1.5;
+  }
+
+  .infos p { margin: 4px 0; }
+
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+    margin-bottom: 30px;
+  }
+
+  .gallery img {
+    width: 100%;
+    border-radius: 12px;
+    object-fit: cover;
+  }
+
+  /* ===== GO BUTTON ===== */
+  .go-btn {
+    position: sticky;
+    bottom: 20px;
+    display: inline-block;
+    background: #000;
+    color: #fff;
+    padding: 14px 24px;
+    border-radius: 50px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    font-size: 1rem;
+    z-index: 10;
+  }
+
   /* ===== RESPONSIVE ===== */
   @media(max-width:768px){
     .hero-content {
+      position: relative;
+      top: auto;
+      left: auto;
+      transform: none;
       text-align: left;
       bottom: 20px;
-      left: 20px;
       width: calc(100% - 40px);
     }
-    .hero-content h1 { font-size: clamp(2rem, 8vw, 4rem); }
-    .hero-content p { font-size: clamp(1rem, 4vw, 1.5rem); }
+
+    .hero.fixed-hero { position: fixed; } 
+    .section { margin-top: 100vh; }
   }
 
 </style>
 </head>
 <body>
 
-<div class="hero">
+<div class="hero fixed-hero">
   <img class="hero-img" src="" alt="Hero">
   <div class="hero-content">
     <h1 id="title"></h1>
@@ -140,60 +168,74 @@
 </div>
 
 <script>
+const IMAGE_BASE_URL = "https://raw.githubusercontent.com/astridkzn/adeleinparis/main/images/";
+const PHOTO_BASE_URL = "https://raw.githubusercontent.com/astridkzn/adeleinparis/main/photos/";
+const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS-TXMdmEEJopZfjsiTYrj2mVSf7g8srJ82XOsdumjArTMPIYhkEqBaMuICXNMnP347qAd-5OFFeXAx/pub?output=csv";
+
+let recos = [];
 const currentReco = JSON.parse(localStorage.getItem("currentReco"));
 
-if (!currentReco) {
-  window.location.href = "index.html";
+if (!currentReco) window.location.href = "index.html";
+
+function parseCSV(str){
+  const lines = str.trim().split("\n");
+  const headers = lines.shift().split(",").map(h=>h.trim());
+  return lines.map(line=>{
+    const values = line.split(",").map(v=>v.trim());
+    const obj = {};
+    headers.forEach((h,i)=> obj[h]=values[i]||"");
+    return obj;
+  });
 }
 
-// HERO IMAGE
+function formatDate(str){
+  if(!str) return "";
+  const options = { day:'numeric', month:'long', year:'numeric' };
+  return new Date(str).toLocaleDateString('fr-FR', options);
+}
+
+/* ===== HERO ===== */
 const heroImg = document.querySelector(".hero-img");
-if (window.innerWidth <= 768 && currentReco.background) {
-  heroImg.src = currentReco.background.startsWith("http") ? currentReco.background : `images/${currentReco.background}`;
-} else if (currentReco.fullscreen) {
-  heroImg.src = currentReco.fullscreen.startsWith("http") ? currentReco.fullscreen : `images/${currentReco.fullscreen}`;
-}
+const heroTitle = document.getElementById("title");
+const heroSubtitle = document.getElementById("subtitle");
 
-// HERO TEXT
-document.getElementById("title").innerText = currentReco.title || "";
-document.getElementById("subtitle").innerText = currentReco.subtitle || "";
+const isMobile = window.innerWidth <= 768;
+const heroSrc = isMobile ? (currentReco.background ? IMAGE_BASE_URL+currentReco.background : "") 
+                         : (currentReco.fullscreen ? IMAGE_BASE_URL+currentReco.fullscreen : "");
+
+heroImg.src = heroSrc;
+
+heroTitle.innerText = currentReco.title || "";
+heroSubtitle.innerText = currentReco.subtitle || "";
+
 if(currentReco.color_secondary){
-  document.getElementById("title").style.color = `#${currentReco.color_secondary}`;
-  document.getElementById("subtitle").style.color = `#${currentReco.color_secondary}`;
+  heroTitle.style.color = `#${currentReco.color_secondary}`;
+  heroSubtitle.style.color = `#${currentReco.color_secondary}`;
 }
 
-// SECTION BACKGROUND & TEXT COLOR
-if(currentReco.color){
-  document.getElementById("section").style.backgroundColor = `#${currentReco.color}`;
-  document.getElementById("section").style.color = currentReco.color_secondary ? `#${currentReco.color_secondary}` : "#fff";
-}
+/* ===== SECTION ===== */
+const section = document.getElementById("section");
+if(currentReco.color) section.style.backgroundColor = `#${currentReco.color}`;
+if(currentReco.color_secondary) section.style.color = `#${currentReco.color_secondary}`;
 
-// DESCRIPTION
 document.getElementById("description").innerText = currentReco.description || "";
 
-// INFOS
 const infosDiv = document.getElementById("infos");
-if(currentReco.start_date && currentReco.end_date){
-  const startDate = new Date(currentReco.start_date);
-  const endDate = new Date(currentReco.end_date);
-  const options = { day: "numeric", month: "long", year: "numeric" };
-  infosDiv.innerHTML = `<p>${startDate.toLocaleDateString("fr-FR", options)} → ${endDate.toLocaleDateString("fr-FR", options)}</p>`;
-}
-if(currentReco.prix){
-  infosDiv.innerHTML += `<p>Prix : ${currentReco.prix}</p>`;
-}
+let start = formatDate(currentReco.start_date);
+let end = formatDate(currentReco.end_date);
+infosDiv.innerHTML = `<p>Dates : ${start} — ${end}</p><p>Prix : ${currentReco.prix || "N/A"}</p>`;
 
-// GALLERY
+/* ===== GALLERY ===== */
 const galleryDiv = document.getElementById("gallery");
 let i = 1;
 while(currentReco[`photo${i}`]){
   const img = document.createElement("img");
-  img.src = currentReco[`photo${i}`].startsWith("http") ? currentReco[`photo${i}`] : `photos/${currentReco[`photo${i}`]}`;
+  img.src = currentReco[`photo${i}`].startsWith("http") ? currentReco[`photo${i}`] : PHOTO_BASE_URL+currentReco[`photo${i}`];
   galleryDiv.appendChild(img);
   i++;
 }
 
-// GO BUTTON
+/* ===== GO BUTTON ===== */
 const goBtn = document.getElementById("goBtn");
 if(currentReco.URL){
   goBtn.href = currentReco.URL;
