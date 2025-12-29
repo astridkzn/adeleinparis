@@ -5,87 +5,182 @@
   <title>Adele in Paris</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    body, html {
-      margin: 0;
-      padding: 0;
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
       height: 100%;
-      font-family: 'Arial', sans-serif;
-      scroll-behavior: smooth;
-      background: linear-gradient(
-        to bottom right,
-        #9BF0E1,
-        #CDF564,
-        #FF4632,
-        #191414,
-        #4100F5
-      );
-      color: #fff;
       overflow-x: hidden;
+      scroll-behavior: smooth;
+      font-family: 'Montserrat', sans-serif;
+      background: #fff;
     }
 
-    .container {
+    /* ===== HERO ===== */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .hero img.bg,
+    .hero img.overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover; /* full screen sans bandes blanches */
+      z-index: 0;
+    }
+
+    .hero img.overlay {
+      z-index: 2;
+      pointer-events: none;
+      transition: transform 0.2s ease-out;
+    }
+
+    /* Desktop / Mobile */
+    .hero img.desktop { display: block; }
+    .hero img.mobile { display: none; }
+    @media (max-width: 768px) {
+      .hero img.desktop { display: none; }
+      .hero img.mobile { display: block; }
+    }
+
+    /* ===== TITRE ===== */
+    .hero h1 {
+      position: absolute;
+      top: 20%; /* remonte le titre */
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1;
+      text-align: center;
+      color: #ff3b3b;
+      font-weight: 900;
+      line-height: 0.8;
+      font-size: clamp(8rem, 15vw, 20rem); /* taille x1.5 par rapport à avant */
+      pointer-events: none;
+      opacity: 0;
+      transform: translate(-50%, 120px);
+      animation: fadeSlideUp 1s forwards;
+    }
+
+    .hero h1 span { display: block; }
+    .hero h1 span:nth-child(1) { animation-delay: 0.2s; }
+    .hero h1 span:nth-child(2) { animation-delay: 0.5s; }
+    .hero h1 span:nth-child(3) { animation-delay: 0.8s; }
+
+    @keyframes fadeSlideUp {
+      to { opacity: 1; transform: translate(-50%, 0); }
+    }
+
+    /* ===== SECTION DATES ===== */
+    .dates-section {
+      padding: 60px 20px;
+      background: #ff3b3b;
+      color: #fff;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      min-height: 100vh;
       gap: 16px;
-      padding: 20px;
+      min-height: 300px;
       text-align: center;
     }
 
-    h1 {
-      font-size: 6vw;
-      font-weight: 900;
-      line-height: 1;
-      margin: 0;
+    .dates-section label {
+      font-size: 1.2rem;
+      font-weight: 600;
     }
 
-    .dates-section {
-      margin-top: 50px;
-      padding: 30px;
-      background-color: rgba(255,255,255,0.05);
-      border-radius: 16px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
+    .dates-section input {
+      padding: 10px;
+      font-size: 1rem;
+      margin: 0 5px;
+      border-radius: 6px;
+      border: none;
+      max-width: 200px;
+      text-align: center;
     }
 
-    input, button {
-      padding: 10px 16px;
+    .dates-section input:focus {
+      outline: none;
+      box-shadow: 0 0 10px rgba(255,59,59,0.7);
+    }
+
+    .dates-section button {
+      padding: 12px 24px;
       font-size: 1rem;
       border-radius: 8px;
       border: none;
-      outline: none;
-    }
-
-    button {
+      background: #fff;
+      color: #ff3b3b;
       cursor: pointer;
-      background-color: #000;
-      color: #fff;
-      position: relative;
-      z-index: 2;
+      transition: transform 0.2s, background 0.2s;
+      margin-top: 10px;
     }
-
+    .dates-section button:hover {
+      transform: scale(1.05);
+      background: #f0f0f0;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Adele in Paris</h1>
 
-    <div class="dates-section">
-      <label for="start-date">T'es dispo quand chacal :</label>
+  <!-- HERO -->
+  <section class="hero">
+
+    <!-- Overlay -->
+    <img class="overlay desktop" src="images/Adele_desktop.png" alt="Overlay desktop">
+    <img class="overlay mobile" src="images/Adele.png" alt="Overlay mobile">
+
+    <!-- TITRE -->
+    <h1>
+      <span>Adele</span>
+      <span>in</span>
+      <span>Paris</span>
+    </h1>
+  </section>
+
+  <!-- DATES PICKER -->
+  <section class="dates-section">
+    <label for="start-date">T'es dispo quand chacal :</label>
+    <div>
       <input type="date" id="start-date">
       <input type="date" id="end-date">
-      <button id="generate-btn">Générer la reco</button>
     </div>
-  </div>
+    <button id="generate-btn">Générer la reco</button>
+  </section>
 
   <script>
+    const startInput = document.getElementById("start-date");
+    const endInput = document.getElementById("end-date");
+    const overlayDesktop = document.querySelector(".overlay.desktop");
+    const overlayMobile = document.querySelector(".overlay.mobile");
+
+    const today = new Date().toISOString().split("T")[0];
+    startInput.value = today;
+    startInput.min = today;
+    endInput.min = today;
+
+    startInput.addEventListener("change", () => {
+      endInput.min = startInput.value;
+    });
+
+    // Parallax overlay
+    window.addEventListener("scroll", () => {
+      const scrollY = window.scrollY;
+      overlayDesktop.style.transform = `translateY(${scrollY * 0.2}px)`;
+      overlayMobile.style.transform = `translateY(${scrollY * 0.2}px)`;
+    });
+
     document.getElementById("generate-btn").onclick = () => {
-      const start = document.getElementById("start-date").value;
-      const end = document.getElementById("end-date").value;
+      const start = startInput.value;
+      const end = endInput.value;
+
+      if (!start || !end || start > end) {
+        alert("Merci de choisir un intervalle de dates valide");
+        return;
+      }
 
       localStorage.setItem("startDate", start);
       localStorage.setItem("endDate", end);
