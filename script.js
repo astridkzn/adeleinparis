@@ -6,10 +6,10 @@ let recos = [];
 function parseCSV(str) {
   const lines = str.trim().split("\n");
   const headers = lines.shift().split(",").map(h => h.trim());
-  return lines.map((line) => {
+  return lines.map(line => {
     const values = line.split(",").map(v => v.trim());
     const obj = {};
-    headers.forEach((h, i) => (obj[h] = values[i] || ""));
+    headers.forEach((h,i) => obj[h] = values[i] || "");
     return obj;
   });
 }
@@ -23,7 +23,7 @@ function filterByDates(data) {
   const startDate = new Date(startFilter);
   const endDate = new Date(endFilter);
 
-  return data.filter((r) => {
+  return data.filter(r => {
     if (!r.start_date || !r.end_date) return false;
     const recoStart = new Date(r.start_date);
     const recoEnd = new Date(r.end_date);
@@ -34,14 +34,17 @@ function filterByDates(data) {
 // BUILD GRID
 function buildGrid() {
   const grid = document.getElementById("grid");
+  if (!grid) return;
   grid.innerHTML = "";
 
   recos.forEach((reco, index) => {
     const card = document.createElement("div");
     card.className = "card";
-    card.style.backgroundImage = reco.background ? `url(${IMAGE_BASE_URL}${reco.background})` : "";
-    card.style.backgroundSize = "cover";
-    card.style.backgroundPosition = "center";
+    if (reco.background) {
+      card.style.backgroundImage = `url(${IMAGE_BASE_URL}${reco.background})`;
+      card.style.backgroundSize = "cover";
+      card.style.backgroundPosition = "center";
+    }
 
     // Overlay couleur
     const overlay = document.createElement("div");
@@ -51,6 +54,7 @@ function buildGrid() {
     overlay.style.width = "100%";
     overlay.style.height = "100%";
     overlay.style.backgroundColor = "transparent";
+    overlay.style.opacity = "0"; // Important !
     overlay.style.transition = "all 0.3s ease";
     card.appendChild(overlay);
 
@@ -61,13 +65,6 @@ function buildGrid() {
     h3.innerText = reco.title || "";
     const p = document.createElement("p");
     p.innerText = reco.subtitle || "";
-    if (reco.color_secondary) {
-      h3.style.color = `#${reco.color_secondary}`;
-      p.style.color = `#${reco.color_secondary}`;
-    } else {
-      h3.style.color = "#fff";
-      p.style.color = "#fff";
-    }
     content.appendChild(h3);
     content.appendChild(p);
     card.appendChild(content);
@@ -75,7 +72,7 @@ function buildGrid() {
     // Hover / click effect
     function activateCard() {
       overlay.style.backgroundColor = reco.color ? `#${reco.color}` : "#ff3b3b";
-      overlay.style.opacity = "1"; // 100% opacity
+      overlay.style.opacity = "1"; // recouvre totalement
       h3.style.color = reco.color_secondary ? `#${reco.color_secondary}` : "#fff";
       p.style.color = reco.color_secondary ? `#${reco.color_secondary}` : "#fff";
     }
@@ -90,32 +87,36 @@ function buildGrid() {
 
     card.addEventListener("click", () => {
       if (window.innerWidth <= 768) activateCard();
-      // Stocke l'index et redirige vers detail.html
       localStorage.setItem("selectedRecoIndex", index);
       window.location.href = "detail.html";
     });
 
     grid.appendChild(card);
   });
+
+  document.getElementById("loading").style.display = "none";
 }
 
 // FETCH & INIT
 fetch(sheetURL)
-  .then((res) => res.text())
-  .then((csv) => {
+  .then(res => res.text())
+  .then(csv => {
     recos = parseCSV(csv);
     recos = filterByDates(recos);
-    if (recos.length === 0) document.getElementById("loading").innerText = "Aucune reco disponible";
+    if (!recos.length) document.getElementById("loading").innerText = "Aucune reco disponible";
     else buildGrid();
   })
-  .catch((err) => {
+  .catch(err => {
     console.error(err);
     document.getElementById("loading").innerText = "Impossible de charger les données";
   });
 
 // CHANGE DATES
-document.getElementById("change-dates").onclick = () => {
-  localStorage.removeItem("startDate");
-  localStorage.removeItem("endDate");
-  window.location.href = "index.html";
-};
+const changeBtn = document.getElementById("change-dates");
+if (changeBtn) {
+  changeBtn.onclick = () => {
+    localStorage.removeItem("startDate");
+    localStorage.removeItem("endDate");
+    window.location.href = "index.html";
+  };
+}
