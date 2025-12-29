@@ -1,80 +1,102 @@
-<style>
-  body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Montserrat', sans-serif;
-    overflow-y: scroll;
-    scrollbar-width: none;
-  }
-  body::-webkit-scrollbar { display: none; }
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Generate — Adele in Paris</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Montserrat', sans-serif;
+      overflow-y: scroll;
+      scrollbar-width: none;
+    }
+    body::-webkit-scrollbar { display: none; }
 
-  .grid {
-    display: grid;
-    gap: 20px;
-    padding: 20px;
-  }
+    #loading {
+      text-align: center;
+      padding: 50px 0;
+      font-size: 1.5rem;
+      color: #fff;
+    }
 
-  @media(min-width: 1200px) { .grid { grid-template-columns: repeat(4, 1fr); } }
-  @media(min-width: 900px) and (max-width: 1199px) { .grid { grid-template-columns: repeat(3, 1fr); } }
-  @media(min-width: 600px) and (max-width: 899px) { .grid { grid-template-columns: repeat(2, 1fr); } }
-  @media(max-width: 599px) { .grid { grid-template-columns: 1fr; } }
+    .grid {
+      display: grid;
+      gap: 20px;
+      padding: 20px;
+    }
 
-  .card {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 3/4;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: #fff;
-    text-align: center;
-    cursor: pointer;
-    background-size: cover;
-    background-position: center;
-    border-radius: 10px;
-    overflow: hidden;
-    transition: transform 0.3s;
-  }
+    @media(min-width: 1200px) { .grid { grid-template-columns: repeat(4, 1fr); } }
+    @media(min-width: 900px) and (max-width: 1199px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+    @media(min-width: 600px) and (max-width: 899px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+    @media(max-width: 599px) { .grid { grid-template-columns: 1fr; } }
 
-  /* Overlay effect */
-  .card::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.6), rgba(0,0,0,0));
-    opacity: 0;
-    transition: opacity 0.3s;
-    border-radius: 10px;
-  }
+    .card {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 3/4;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      text-align: center;
+      cursor: pointer;
+      background-size: cover;
+      background-position: center;
+      border-radius: 10px;
+      overflow: hidden;
+      transition: transform 0.3s;
+    }
 
-  .card:hover::after {
-    opacity: 1;
-  }
+    /* Overlay effect */
+    .card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.6), rgba(0,0,0,0));
+      opacity: 0;
+      transition: opacity 0.3s;
+      border-radius: 10px;
+    }
 
-  .card h3, .card p {
-    margin: 0;
-    position: relative; /* au-dessus de l'overlay */
-    z-index: 2;
-    text-shadow: 0 0 10px rgba(0,0,0,0.7);
-    transition: transform 0.3s, color 0.3s;
-  }
+    .card:hover::after { opacity: 1; }
 
-  .card:hover h3 { transform: scale(1.05); color: #fff; }
-  .card:hover p { transform: scale(1.05); color: #fff; }
+    .card h3, .card p {
+      margin: 0;
+      position: relative;
+      z-index: 2;
+      text-shadow: 0 0 10px rgba(0,0,0,0.7);
+      transition: transform 0.3s, color 0.3s;
+    }
 
-  h3 { font-size: 1.2rem; font-weight: bold; }
-  p { font-size: 1rem; }
+    .card:hover h3 { transform: scale(1.05); color: #fff; }
+    .card:hover p { transform: scale(1.05); color: #fff; }
 
-  .bottom-btn {
-    display: block;
-    margin: 30px auto;
-    padding: 10px 20px;
-    font-size: 1rem;
-    border: none;
-    border-radius: 5px;
-    background: #fff;
-    color: #000;
-    cursor: pointer;
-  }
-</style>
+    h3 { font-size: 1.2rem; font-weight: bold; }
+    p { font-size: 1rem; }
+
+    .bottom-btn {
+      display: block;
+      margin: 30px auto;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
+      background: #fff;
+      color: #000;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="loading">Chargement…</div>
+  <div class="grid" id="grid" style="display:none;"></div>
+
+  <button class="bottom-btn" id="change-dates">Changer de dates</button>
+
+  <script src="script.js"></script>
+</body>
+</html>
