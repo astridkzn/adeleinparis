@@ -1,25 +1,16 @@
-// ==============================
-// CONFIG
-// ==============================
-
 const sheetURL =
   "https://docs.google.com/spreadsheets/d/e/2PACX-1vS-TXMdmEEJopZfjsiTYrj2mVSf7g8srJ82XOsdumjArTMPIYhkEqBaMuICXNMnP347qAd-5OFFeXAx/pub?output=csv";
 
 const IMAGE_BASE_URL =
-  "https://raw.githubusercontent.com/TON_USER/TON_REPO/main/images/";
-
-// ==============================
-// STATE
-// ==============================
+  "https://raw.githubusercontent.com/astridkzn/adeleinparis/main/images/";
 
 let recos = [];
 
-// ==============================
-// CSV PARSER (simple et robuste)
-// ==============================
-
-function parseCSV(text) {
-  const lines = text.trim().split("\n");
+/* =========================
+   CSV PARSER
+========================= */
+function parseCSV(str) {
+  const lines = str.trim().split("\n");
   const headers = lines.shift().split(",").map(h => h.trim());
 
   return lines.map(line => {
@@ -32,10 +23,9 @@ function parseCSV(text) {
   });
 }
 
-// ==============================
-// FILTRE PAR DATES
-// ==============================
-
+/* =========================
+   DATE FILTER
+========================= */
 function filterByDates(data) {
   const startFilter = localStorage.getItem("startDate");
   const endFilter = localStorage.getItem("endDate");
@@ -55,85 +45,89 @@ function filterByDates(data) {
   });
 }
 
-// ==============================
-// GRID BUILDER
-// ==============================
-
+/* =========================
+   GRID BUILDER
+========================= */
 function buildGrid() {
   const grid = document.getElementById("grid");
-  const loading = document.getElementById("loading");
-
   grid.innerHTML = "";
 
   recos.forEach(reco => {
     const card = document.createElement("div");
     card.className = "card";
 
-    // Background image
+    /* --- BACKGROUND IMAGE --- */
     if (reco.background) {
-      const imageUrl = IMAGE_BASE_URL + reco.background;
+      const fileName = reco.background
+        .replace(/"/g, "")
+        .replace(/'/g, "")
+        .trim();
+
+      const imageUrl = IMAGE_BASE_URL + fileName;
+
       card.style.backgroundImage = `url("${imageUrl}")`;
       card.style.backgroundSize = "cover";
       card.style.backgroundPosition = "center";
       card.style.backgroundRepeat = "no-repeat";
+
+      // debug safe
+      console.log("BG:", imageUrl);
     } else {
-      card.style.backgroundColor = "#000";
+      card.style.background = "#000";
     }
 
-    // Title
+    /* --- OVERLAY CONTENT --- */
+    const content = document.createElement("div");
+    content.className = "card-content";
+
     const title = document.createElement("h3");
     title.innerText = reco.title || "";
 
-    // Subtitle
     const subtitle = document.createElement("p");
     subtitle.innerText = reco.subtitle || "";
 
-    card.appendChild(title);
-    card.appendChild(subtitle);
+    content.appendChild(title);
+    content.appendChild(subtitle);
+    card.appendChild(content);
 
-    // Click → URL
+    /* --- CLICK --- */
     card.onclick = () => {
-      if (reco.URL) {
-        window.open(reco.URL, "_blank");
-      }
+      if (reco.URL) window.open(reco.URL, "_blank");
     };
 
     grid.appendChild(card);
   });
 
-  // UI states
-  loading.style.display = "none";
+  document.getElementById("loading").style.display = "none";
   grid.style.display = "grid";
 }
 
-// ==============================
-// FETCH & INIT
-// ==============================
-
+/* =========================
+   FETCH & INIT
+========================= */
 fetch(sheetURL)
   .then(res => res.text())
-  .then(text => {
-    recos = parseCSV(text);
+  .then(csv => {
+    recos = parseCSV(csv);
     recos = filterByDates(recos);
 
     if (recos.length === 0) {
       document.getElementById("loading").innerText =
-        "Aucune reco disponible pour ces dates";
+        "Aucune reco disponible pour cette période";
       return;
     }
 
     buildGrid();
   })
   .catch(err => {
-    console.error(err);
+    console.error("CSV ERROR", err);
     document.getElementById("loading").innerText =
-      "Erreur de chargement des données";
+      "Impossible de charger les données";
   });
 
-// ==============================
-// CHANGER DE DATES
-// ==============================
-
+/* =========================
+   CHANGE DATES
+========================= */
 document.getElementById("change-dates").onclick = () => {
   localStorage.removeItem("startDate");
   localStorage.removeItem("endDate");
