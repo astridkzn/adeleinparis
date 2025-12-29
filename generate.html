@@ -2,9 +2,8 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Generate — Adèle in Paris</title>
+  <title>Generate — Adele in Paris</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Plus+Jakarta+Sans:wght@400;600&display=swap');
 
@@ -13,7 +12,8 @@
       padding: 0;
       font-family: 'Plus Jakarta Sans', sans-serif;
       background: #fff;
-      color: #111;
+      color: #fff;
+      position: relative;
       min-height: 100vh;
     }
 
@@ -22,22 +22,23 @@
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 16px;
       padding: 16px;
-      padding-bottom: 90px;
+      padding-bottom: 100px; /* espace pour le bouton */
     }
 
-    /* ================= CARD ================= */
     .card {
       position: relative;
       height: 300px;
-      border-radius: 12px;
-      overflow: hidden;
       cursor: pointer;
+      overflow: hidden;
+      border-radius: 12px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-start;
       background-size: cover;
       background-position: center;
-
+      transition: all 0.4s ease;
       opacity: 0;
       transform: translateY(20px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
     }
 
     .card.visible {
@@ -45,21 +46,17 @@
       transform: translateY(0);
     }
 
-    /* ===== LAYER GRADIENT ===== */
     .card::after {
-      content: "";
+      content: '';
       position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        to top,
-        rgba(0,0,0,0.55),
-        rgba(0,0,0,0.15),
-        transparent
-      );
-      z-index: 1;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 60%;
+      background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);
+      pointer-events: none;
     }
 
-    /* ================= TAGS ================= */
     .card-tags {
       position: absolute;
       top: 12px;
@@ -71,80 +68,79 @@
     }
 
     .tag-genre {
-      font-size: 0.75rem;
+      font-size: 0.9rem;
       font-weight: 600;
       color: #fff;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
     }
 
     .tag-warning {
-      font-size: 0.75rem;
-      font-weight: 700;
+      font-size: 0.85rem;
+      font-weight: 600;
       color: #FFFF00;
-      text-transform: uppercase;
     }
 
-    /* ================= CONTENT ================= */
     .card-content {
-      position: relative;
-      z-index: 2;
       padding: 16px;
+      z-index: 2;
     }
 
     .card-content h3 {
       font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
       font-size: 1.5rem;
       margin: 0;
       color: #fff;
+      transition: color 0.4s ease;
     }
 
     .card-content p {
-      font-size: 1.05rem;
-      margin-top: 4px;
+      font-weight: 400;
+      font-size: 1.1rem;
+      margin: 4px 0 0 0;
       color: #fff;
+      transition: color 0.4s ease;
     }
 
-    /* ================= ARROW ================= */
     .arrow {
       position: absolute;
       top: 12px;
       right: 12px;
       width: 24px;
       height: 3px;
-      background: #fff;
+      background-color: white;
       opacity: 0;
       transform: translateX(10px);
       transition: all 0.3s ease;
       z-index: 3;
     }
 
-    /* ================= CTA ================= */
     #change-dates {
       position: fixed;
       bottom: 0;
       left: 50%;
       transform: translateX(-50%);
-      padding: 12px 24px;
+      margin: 0;
+      padding: 12px 20px;
       font-size: 1rem;
-      background: #ff3b3b;
+      cursor: pointer;
+      background-color: #ff3b3b;
       border: none;
       border-radius: 8px;
       color: #fff;
-      cursor: pointer;
       z-index: 10;
-      box-shadow: 0 -20px 30px -10px rgba(255,255,255,0.6);
+      box-shadow: 0 -20px 30px -10px rgba(255,255,255,0.5);
     }
 
     #loading {
       text-align: center;
-      margin-top: 40px;
+      margin-top: 20px;
+      color: #111;
     }
+
   </style>
 </head>
 
 <body>
-
   <div id="loading">Chargement...</div>
   <div id="grid"></div>
   <button id="change-dates">Changer de dates</button>
