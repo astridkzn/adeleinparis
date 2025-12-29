@@ -2,23 +2,19 @@ const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS-TXMdmEEJopZ
 const IMAGE_BASE_URL = "https://raw.githubusercontent.com/astridkzn/adeleinparis/main/images/";
 let recos = [];
 
-// ==========================
 // CSV PARSER
-// ==========================
 function parseCSV(str) {
   const lines = str.trim().split("\n");
   const headers = lines.shift().split(",").map(h => h.trim());
   return lines.map(line => {
     const values = line.split(",").map(v => v.trim());
     const obj = {};
-    headers.forEach((h, i) => obj[h] = values[i] || "");
+    headers.forEach((h,i) => obj[h] = values[i] || "");
     return obj;
   });
 }
 
-// ==========================
 // FILTER BY DATES
-// ==========================
 function filterByDates(data) {
   const startFilter = localStorage.getItem("startDate");
   const endFilter = localStorage.getItem("endDate");
@@ -35,9 +31,7 @@ function filterByDates(data) {
   });
 }
 
-// ==========================
 // BUILD GRID
-// ==========================
 function buildGrid() {
   const grid = document.getElementById("grid");
   grid.innerHTML = "";
@@ -79,16 +73,12 @@ function buildGrid() {
     // Interaction hover / click
     let clickedOnce = false;
     function activateCard() {
-      // faire disparaître l'image
-      card.style.opacity = 0.5; // peut ajuster si tu veux un fade complet
       colorOverlay.style.backgroundColor = reco.color ? `#${reco.color}` : "#ff3b3b";
       colorOverlay.style.opacity = 1;
 
-      // texte blanc
-      h3.style.color = "#fff";
-      p.style.color = "#fff";
+      h3.style.color = reco.color_secondary ? `#${reco.color_secondary}` : "#fff";
+      p.style.color = reco.color_secondary ? `#${reco.color_secondary}` : "#fff";
 
-      // flèche visible
       arrow.style.opacity = 1;
       arrow.style.transform = "translateX(0)";
     }
@@ -97,7 +87,6 @@ function buildGrid() {
     card.addEventListener("mouseleave", () => { if (window.innerWidth > 768) {
       colorOverlay.style.backgroundColor = "transparent";
       colorOverlay.style.opacity = 0;
-      card.style.opacity = 1;
       h3.style.color = "";
       p.style.color = "";
       arrow.style.opacity = 0;
@@ -117,9 +106,7 @@ function buildGrid() {
   document.getElementById("loading").style.display = "none";
 }
 
-// ==========================
 // FETCH & INIT
-// ==========================
 fetch(sheetURL)
   .then(res => res.text())
   .then(csv => {
@@ -133,9 +120,7 @@ fetch(sheetURL)
     document.getElementById("loading").innerText = "Impossible de charger les données";
   });
 
-// ==========================
 // CHANGE DATES
-// ==========================
 document.getElementById("change-dates").onclick = () => {
   localStorage.removeItem("startDate");
   localStorage.removeItem("endDate");
