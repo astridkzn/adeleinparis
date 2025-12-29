@@ -16,7 +16,10 @@ function parseCSV(str) {
 
 function showReco(index) {
   const reco = recos[index];
-  document.getElementById("title").innerText = reco.title + (reco.subtitle ? " " + reco.subtitle : "");
+
+  document.getElementById("main-title").innerText = reco.title || "";
+  document.getElementById("subtitle").innerText = reco.subtitle || "";
+
   document.getElementById("lieu").innerText = reco.lieu || "";
 
   document.getElementById("more").onclick = () => {
