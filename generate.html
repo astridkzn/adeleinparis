@@ -118,19 +118,26 @@
 
     #change-dates {
       position: fixed;
-      bottom: 20px; /* remonté */
+      bottom: 20px;
       left: 50%;
       transform: translateX(-50%);
       margin: 0;
-      padding: 12px 20px;
+      padding: 14px 36px;
       font-size: 1rem;
+      font-weight: 600
       cursor: pointer;
       background-color: #000;
       border: none;
-      border-radius: 8px;
+      border-radius: 999px;
       color: #fff;
       z-index: 10;
       box-shadow: 0 -5px 20px rgba(0,0,0,0.3);
+      transition: all 0.3s ease;
+    }
+
+    #change-dates:hover {
+      background-color: #fff;
+      color: #ff4632;
     }
 
     #loading {
