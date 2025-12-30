@@ -28,29 +28,45 @@ body{
   height:100%;
   object-fit:cover;
 }
+
+/* overlay lisibilité */
+.hero::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    to bottom,
+    rgba(0,0,0,.35),
+    rgba(0,0,0,.15),
+    rgba(0,0,0,.35)
+  );
+  z-index:1;
+}
+
 .hero-content{
   position:absolute;
   inset:0;
+  z-index:2;
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
   text-align:center;
-  z-index:2;
+  max-width:70%;
+  margin:0 auto;
   opacity:0;
-  animation:fadeHero .8s ease forwards;
+  animation:fadeHero .9s ease forwards;
   animation-delay:.4s;
 }
-@keyframes fadeHero{
-  to{opacity:1}
-}
+@keyframes fadeHero{to{opacity:1}}
+
 .hero-content h1{
-  font-size:clamp(2.5rem,7vw,6rem);
+  font-size:clamp(2.8rem,6vw,5.5rem);
   font-weight:800;
 }
 .hero-content p{
-  font-size:clamp(1.1rem,3vw,2rem);
-  margin-top:12px;
+  font-size:clamp(1.3rem,2.5vw,2rem);
+  margin-top:14px;
 }
 
 /* ===== BACK BUTTON ===== */
@@ -58,73 +74,81 @@ body{
   position:sticky;
   top:20px;
   left:20px;
-  width:44px;
-  height:44px;
+  width:48px;
+  height:48px;
   border-radius:50%;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:1.8rem;
+  font-size:1.6rem;
   cursor:pointer;
   z-index:5;
-  background:rgba(255,255,255,.8);
-  backdrop-filter:blur(6px);
+  background:#000;
+  color:#fff;
+  transition:.3s;
+}
+.back-btn:hover{
+  background:#fff;
+  color:#000;
 }
 
 /* ===== SECTION ===== */
 .section{
   position:relative;
   margin-top:100vh;
-  padding:80px 6vw 120px;
+  padding:90px 6vw 140px;
   z-index:2;
 }
 
-/* ===== INFOS LAYOUT ===== */
+/* ===== INFOS ===== */
 .infos-wrapper{
   display:grid;
   grid-template-columns:2fr 1fr;
-  gap:60px;
-  margin-bottom:80px;
+  gap:70px;
+  margin-bottom:90px;
 }
 .description{
   white-space:pre-wrap;
-  line-height:1.6;
+  line-height:1.7;
   font-size:1.05rem;
 }
 .infos{
   display:flex;
   flex-direction:column;
-  gap:24px;
+  gap:30px;
 }
 .info-title{
   font-weight:800;
+  font-size:1.5rem;
   margin-bottom:6px;
 }
 
 /* ===== GALLERY ===== */
 .gallery{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:20px;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:22px;
 }
 .gallery img{
   width:100%;
-  border-radius:14px;
+  border-radius:16px;
   object-fit:cover;
 }
 
 /* ===== GO BUTTON ===== */
 .go-btn{
   position:sticky;
-  bottom:20px;
+  bottom:24px;
   margin-left:auto;
   display:inline-block;
   background:#000;
   color:#fff;
-  padding:14px 28px;
+  padding:28px 56px;
   border-radius:999px;
   font-weight:600;
+  font-size:1.3rem;
   text-align:center;
+  text-decoration:none;
   transition:.3s;
 }
 .go-btn:hover{
@@ -134,9 +158,18 @@ body{
 
 /* ===== MOBILE ===== */
 @media(max-width:768px){
+  .hero-content{
+    max-width:90%;
+  }
+  .hero-content h1{
+    font-size:clamp(3.5rem,10vw,4.5rem);
+  }
+  .hero-content p{
+    font-size:clamp(1.6rem,5vw,2rem);
+  }
   .infos-wrapper{
     grid-template-columns:1fr;
-    gap:40px;
+    gap:50px;
   }
   .gallery{
     grid-template-columns:1fr;
@@ -156,7 +189,7 @@ body{
   </div>
 </div>
 
-<div class="back-btn" id="backBtn" onclick="history.back()">←</div>
+<div class="back-btn" onclick="history.back()">←</div>
 
 <!-- ===== SECTION ===== -->
 <section class="section" id="section">
@@ -187,47 +220,38 @@ body{
 </section>
 
 <script>
-const reco = JSON.parse(localStorage.getItem("currentReco"));
+const reco=JSON.parse(localStorage.getItem("currentReco"));
 if(!reco) location.href="index.html";
 
-/* ===== IMAGE ===== */
-const heroImg=document.getElementById("heroImg");
 heroImg.src=window.innerWidth<=768 && reco.background
   ? `images/${reco.background}`
   : `images/${reco.fullscreen}`;
 
-/* ===== TEXT ===== */
 title.innerText=reco.title||"";
 subtitle.innerText=reco.subtitle||"";
 
 if(reco.color_secondary){
   title.style.color=`#${reco.color_secondary}`;
   subtitle.style.color=`#${reco.color_secondary}`;
-  document.getElementById("backBtn").style.color=`#${reco.color_secondary}`;
 }
 
-/* ===== SECTION COLORS ===== */
 if(reco.color){
   section.style.background=`#${reco.color}`;
-  section.style.color=reco.color_secondary ? `#${reco.color_secondary}` : "#fff";
+  section.style.color=reco.color_secondary?`#${reco.color_secondary}`:"#fff";
 }
 
-/* ===== DESCRIPTION ===== */
 description.innerText=reco.description||"";
 
-/* ===== DATES ===== */
 function formatDate(d){
   return new Date(d).toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
 }
-dates.innerText = reco.start_date && reco.end_date
+dates.innerText=reco.start_date&&reco.end_date
   ? `${formatDate(reco.start_date)} → ${formatDate(reco.end_date)}`
   : "";
 
-/* ===== LIEU / PRIX ===== */
 lieu.innerText=reco.lieu||"";
 price.innerText=reco.prix||"";
 
-/* ===== GALLERY ===== */
 let i=1;
 while(reco[`photo${i}`]){
   const img=document.createElement("img");
@@ -236,10 +260,7 @@ while(reco[`photo${i}`]){
   i++;
 }
 
-/* ===== GO ===== */
-if(reco.URL){
-  goBtn.href=reco.URL;
-}
+if(reco.URL) goBtn.href=reco.URL;
 </script>
 
 </body>
