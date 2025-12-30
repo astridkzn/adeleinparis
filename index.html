@@ -227,16 +227,28 @@
       .no-date-option {
         margin-top:36px;
         font-size:0.75rem;
-        opacity: 0.8
       }
 
       .no-date-option label {
+        opacity: 0.25;
+        transition: opacity 0.3s ease;
         cursor: pointer;
       }
 
       .no-date-option input {
+        -webkit-tap-highlight-color; transparent;
+        outline: none;
+        border: none;
+        
+        opacity: 0.25;
+        custor: pointer;
+        transition: opacity 0.3s ease;
         margin-right: 10px;
         transform: scale(1.1);
+      }
+      .no-date-option input:checked + label {
+        opacity: 0.75;
+      }
     }
   </style>
 </head>
