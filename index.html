@@ -176,12 +176,20 @@
       .hero-title {
         top: 18%;
         left: 6%;
-        transform: translateY(0); /* PAS de -50% en mobile */
+        transform: translateY(40px);
         text-align: center;
 
         font-size: clamp(6rem, 18vw, 8rem);
         line-height: 0.85;
         max-width: 88%;
+
+        animation: titleRevealMobile 1s ease forwards;
+      @keyframes titleRevealMobile {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+          }
+        }
       }
 
       .hero-subtitle {
