@@ -223,6 +223,19 @@
       .dates-section label {
         font-size: 1.1rem;
       }
+
+      .no-date-option {
+        margin-top:24px;
+        font-size:0.95rem;
+      }
+
+      .no-date-option label {
+        cursor: pointer;
+      }
+
+      .no-date-option input {
+        margin-right: 10px;
+        transform: scale(1.1);
     }
   </style>
 </head>
@@ -255,6 +268,13 @@
       <input type="date" id="start-date">
       <input type="date" id="end-date">
     </div>
+
+    <div class="no-date-option">
+      <label>
+        <input type="checkbox" id="no-date-checkbox">
+      </label>
+    </div>
+    
     <button id="generate-btn">C'est partiii</button>
   </section>
 
