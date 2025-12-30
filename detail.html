@@ -2,225 +2,340 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Détail — Adele in Paris</title>
+<title>Détail — Adèle in Paris</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&display=swap" rel="stylesheet">
+
 <style>
+/* ================= RESET ================= */
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Sora', sans-serif; background: #fff; color: #111; overflow-x: hidden; scrollbar-width: none; }
-body::-webkit-scrollbar { width: 0; background: transparent; }
+body {
+  font-family: 'Sora', sans-serif;
+  background: #fff;
+  color: #111;
+  overflow-x: hidden;
+}
 
-a { text-decoration: none; }
+/* ===== HIDE SCROLLBAR ===== */
+body {
+  scrollbar-width: none;
+}
+body::-webkit-scrollbar {
+  display: none;
+}
 
-/* ===== HERO ===== */
+/* ================= HERO ================= */
 .hero {
   position: relative;
-  width: 100%;
   height: 100vh;
+  width: 100%;
   overflow: hidden;
 }
-.hero img.hero-img {
+
+.hero img {
   position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
+}
+
+/* overlay gradient for readability */
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.35),
+    rgba(0,0,0,0.15),
+    rgba(0,0,0,0.35)
+  );
   z-index: 1;
 }
+
+/* ================= HERO CONTENT ================= */
 .hero-content {
   position: absolute;
+  inset: 0;
   z-index: 2;
-  width: 70%;
-  max-width: 1200px;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
-  color: #fff;
-  background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2));
-  padding: 20px;
-  border-radius: 12px;
+  padding: 0 15%;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: heroFade 1s ease forwards;
+  animation-delay: 0.4s;
 }
+
+@keyframes heroFade {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .hero-content h1 {
-  font-size: clamp(3rem, 8vw, 6rem);
+  font-size: clamp(3.5rem, 7vw, 6rem);
   font-weight: 800;
   margin-bottom: 1rem;
 }
+
 .hero-content p {
-  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-size: clamp(1.4rem, 3vw, 2rem);
   font-weight: 400;
 }
 
-/* ===== BACK BUTTON ===== */
+/* ================= BACK BUTTON ================= */
 .back-btn {
-  position: sticky;
-  top: 20px; left: 20px;
+  position: fixed;
+  top: 20px;
+  left: 20px;
   z-index: 20;
-  font-size: 2rem;
-  cursor: pointer;
-  color: #fff;
-  background: #000;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  width: 50px; height: 50px;
-  display: flex; align-items: center; justify-content: center;
-  transition: all 0.3s ease;
+  background: #000;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  cursor: pointer;
+  transition: background 0.3s ease, color 0.3s ease;
 }
-.back-btn:hover { background-color: var(--color-secondary); color: #fff; }
 
-/* ===== SECTION ===== */
+.back-btn:hover {
+  background: #fff;
+  color: #000;
+}
+
+/* ================= SECTION ================= */
 .section {
-  padding: 40px 20px;
   position: relative;
+  z-index: 3;
+  padding: 80px 8vw 120px;
 }
-.section-grid {
+
+/* layout desktop */
+.section-top {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 40px;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 60px;
+  margin-bottom: 60px;
 }
-@media(min-width: 768px) {
-  .section-grid { grid-template-columns: 2fr 1fr; gap: 60px; }
+
+.description {
+  white-space: pre-wrap;
+  line-height: 1.6;
 }
-.section h2 { font-weight: 700; margin-bottom: 8px; font-size: 1.25rem; }
 
-/* ===== DESCRIPTION & INFOS ===== */
-.description { white-space: pre-wrap; line-height: 1.6; }
-.infos p { margin: 4px 0; }
-.info-block { margin-bottom: 16px; }
+/* ================= INFOS ================= */
+.infos {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
 
-/* ===== GALLERY ===== */
+.info-title {
+  font-weight: 800;
+  font-size: 1.5rem;
+  margin-bottom: 6px;
+}
+
+/* ================= GALLERY ================= */
 .gallery {
   display: grid;
-  gap: 16px;
-  margin-top: 40px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
 }
-@media(min-width: 768px) { .gallery { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); } }
-@media(max-width: 767px) { .gallery { grid-template-columns: 1fr; } }
+
+/* fade + hover */
 .gallery img {
   width: 100%;
-  border-radius: 12px;
+  border-radius: 14px;
   object-fit: cover;
   opacity: 0;
-  transform: scale(0.98);
-  transition: all 0.5s ease;
+  transform: translateY(8px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
 }
-.gallery img.visible { opacity: 1; transform: scale(1); }
-.gallery img:hover { transform: scale(1.05); }
 
-/* ===== GO BUTTON ===== */
-.go-wrapper { display: flex; justify-content: flex-end; margin-top: 20px; }
+.gallery img.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (hover: hover) {
+  .gallery img:hover {
+    transform: scale(1.04);
+  }
+}
+
+/* ================= GO BUTTON ================= */
+.go-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 60px;
+}
+
 .go-btn {
-  padding: 28px 48px;
-  font-size: 1.2rem;
-  text-decoration: none;
   background: #000;
   color: #fff;
-  border-radius: 50px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  opacity: 0;
-  transform: translateY(20px);
+  padding: 28px 48px;
+  border-radius: 999px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.3s ease, color 0.3s ease;
 }
-.go-btn:hover { background-color: var(--color-secondary); color: #fff; }
-.go-btn.visible { opacity: 1; transform: translateY(0); }
 
-/* ===== RESPONSIVE HERO MOBILE ===== */
-@media(max-width: 767px) {
+.go-btn:hover {
+  background: #fff;
+  color: #000;
+}
+
+/* ================= MOBILE ================= */
+@media(max-width: 768px) {
   .hero-content {
-    width: 90%;
-    font-size: 1.5rem;
+    padding: 0 10%;
   }
-  .hero-content h1 { font-size: clamp(4rem, 10vw, 6rem); }
-  .hero-content p { font-size: clamp(1.5rem, 4vw, 2rem); }
+
+  .hero-content h1 {
+    font-size: clamp(4rem, 12vw, 5rem);
+  }
+
+  .hero-content p {
+    font-size: clamp(1.6rem, 5vw, 2rem);
+  }
+
+  .section-top {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .gallery {
+    grid-template-columns: 1fr;
+  }
+
+  .go-wrapper {
+    justify-content: flex-end;
+  }
 }
 </style>
 </head>
+
 <body>
 
+<!-- HERO -->
 <div class="hero">
-  <img class="hero-img" src="" alt="Hero">
+  <img id="heroImg" alt="">
   <div class="hero-content">
-    <h1 id="title"></h1>
-    <p id="subtitle"></p>
+    <div>
+      <h1 id="title"></h1>
+      <p id="subtitle"></p>
+    </div>
   </div>
-  <div class="back-btn" onclick="history.back()">←</div>
 </div>
 
-<section class="section" id="section">
-  <div class="section-grid">
-    <div>
-      <h2>Description</h2>
-      <div class="description" id="description"></div>
-    </div>
+<div class="back-btn" onclick="history.back()">←</div>
+
+<!-- SECTION -->
+<div class="section" id="section">
+  <div class="section-top">
+    <div class="description" id="description"></div>
+
     <div class="infos">
-      <div class="info-block">
-        <h2>Lieu</h2>
-        <p id="lieu"></p>
-      </div>
-      <div class="info-block">
-        <h2>Dates</h2>
+      <div>
+        <div class="info-title">Dates</div>
         <p id="dates"></p>
       </div>
-      <div class="info-block">
-        <h2>Tarif</h2>
-        <p id="tarif"></p>
+
+      <div>
+        <div class="info-title">Lieu</div>
+        <p id="lieu"></p>
+      </div>
+
+      <div>
+        <div class="info-title">Tarif</div>
+        <p id="price"></p>
       </div>
     </div>
   </div>
+
   <div class="gallery" id="gallery"></div>
+
   <div class="go-wrapper">
-    <a class="go-btn" href="#" target="_blank" id="goBtn">GO</a>
+    <a class="go-btn" id="goBtn" target="_blank">GO</a>
   </div>
-</section>
+</div>
 
 <script>
-const currentReco = JSON.parse(localStorage.getItem("currentReco"));
-if(!currentReco){ window.location.href="index.html"; }
+const reco = JSON.parse(localStorage.getItem("currentReco"));
+if (!reco) location.href = "index.html";
 
-// COLOR SECONDARY
-const colorSecondary = currentReco.color_secondary ? `#${currentReco.color_secondary}` : "#000";
-document.documentElement.style.setProperty('--color-secondary', colorSecondary);
+/* HERO IMAGE */
+const heroImg = document.getElementById("heroImg");
+heroImg.src =
+  window.innerWidth <= 768
+    ? `images/${reco.background}`
+    : `images/${reco.fullscreen}`;
 
-// HERO
-const heroImg = document.querySelector(".hero-img");
-heroImg.src = currentReco.fullscreen || currentReco.background || "";
-document.getElementById("title").innerText = currentReco.title || "";
-document.getElementById("subtitle").innerText = currentReco.subtitle || "";
+/* HERO TEXT */
+title.innerText = reco.title || "";
+subtitle.innerText = reco.subtitle || "";
+if (reco.color_secondary) {
+  title.style.color = `#${reco.color_secondary}`;
+  subtitle.style.color = `#${reco.color_secondary}`;
+}
 
-// SECTION
-document.getElementById("description").innerText = currentReco.description || "";
-document.getElementById("lieu").innerText = currentReco.lieu || "";
-const startDate = new Date(currentReco.start_date);
-const endDate = new Date(currentReco.end_date);
-const options = { day:"numeric", month:"long", year:"numeric" };
-document.getElementById("dates").innerText = startDate && endDate ? `${startDate.toLocaleDateString("fr-FR", options)} → ${endDate.toLocaleDateString("fr-FR", options)}` : "";
-document.getElementById("tarif").innerText = currentReco.prix || "";
+/* SECTION COLORS */
+if (reco.color) {
+  section.style.backgroundColor = `#${reco.color}`;
+  section.style.color = reco.color_secondary
+    ? `#${reco.color_secondary}`
+    : "#fff";
+}
 
-// GALLERY
-const galleryDiv = document.getElementById("gallery");
+/* CONTENT */
+description.innerText = reco.description || "";
+lieu.innerText = reco.lieu || "";
+price.innerText = reco.prix || "";
+
+if (reco.start_date && reco.end_date) {
+  const opt = { day: "numeric", month: "long", year: "numeric" };
+  dates.innerText =
+    new Date(reco.start_date).toLocaleDateString("fr-FR", opt) +
+    " → " +
+    new Date(reco.end_date).toLocaleDateString("fr-FR", opt);
+}
+
+/* GALLERY */
 let i = 1;
-while(currentReco[`photo${i}`]){
+while (reco[`photo${i}`]) {
   const img = document.createElement("img");
-  img.src = currentReco[`photo${i}`].startsWith("http") ? currentReco[`photo${i}`] : `photos/${currentReco[`photo${i}`]}`;
-  galleryDiv.appendChild(img);
-  // fade in léger
-  setTimeout(()=>img.classList.add("visible"), i*150);
+  img.src = `photos/${reco[`photo${i}`]}`;
+  gallery.appendChild(img);
   i++;
 }
 
-// GO BUTTON
-const goBtnEl = document.getElementById("goBtn");
-goBtnEl.href = currentReco.URL || "#";
+/* GO */
+if (reco.URL) goBtn.href = reco.URL;
 
-// FADE GO BUTTON AU SCROLL
-const sectionEl = document.getElementById("section");
-const goObserver = new IntersectionObserver(entries=>{
-  entries.forEach(entry=>{
-    if(entry.isIntersecting){
-      goBtnEl.classList.add("visible");
-      goObserver.unobserve(sectionEl);
+/* FADE IN GALLERY */
+const imgs = document.querySelectorAll(".gallery img");
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add("visible");
+      observer.unobserve(e.target);
     }
   });
-},{threshold:0.3});
-goObserver.observe(sectionEl);
+}, { threshold: 0.2 });
+
+imgs.forEach(img => observer.observe(img));
 </script>
+
 </body>
 </html>
