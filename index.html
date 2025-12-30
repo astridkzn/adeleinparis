@@ -129,8 +129,8 @@
       position: relative;
       margin-top: -60px; /* moins de recouvrement */
       padding: 90px 20px 80px;
-      background: #ff4632;
-      color: #fff;
+      background: #191414;
+      color: #ff4632;
       text-align: center;
       border-radius: 40px 40px 0 0;
       z-index: 6;
@@ -152,6 +152,9 @@
       margin: 0 6px;
       max-width: 180px;
       text-align: center;
+
+      background: #fff;
+      color: #191414
     }
 
     .dates-section button {
@@ -159,11 +162,18 @@
       padding: 14px 36px;
       border-radius: 999px;
       border: none;
-      background: #fff;
-      color: #ff4632;
+      background: #ff4632;
+      color: #fff;
       font-size: 1rem;
       font-weight: 600;
       cursor: pointer;
+
+      transition: background 0.25s ease, color 0.25s ease;
+    }
+
+    .dates-section button: hover {
+      background: #fff;
+      color: #ff4632
     }
 
     /* ===================== MOBILE ===================== */
