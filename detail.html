@@ -2,244 +2,243 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Détail — Adele in Paris</title>
+<title>Détail — Adèle in Paris</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&display=swap" rel="stylesheet">
+
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Sora', sans-serif; background: #fff; color: #111; overflow-x: hidden; }
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Sora',sans-serif;
+  background:#fff;
+  color:#111;
+  overflow-x:hidden;
+}
 
-  a { text-decoration: none; }
+/* ===== HERO ===== */
+.hero{
+  position:fixed;
+  inset:0;
+  height:100vh;
+  z-index:1;
+}
+.hero img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.hero-content{
+  position:absolute;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  z-index:2;
+  opacity:0;
+  animation:fadeHero .8s ease forwards;
+  animation-delay:.4s;
+}
+@keyframes fadeHero{
+  to{opacity:1}
+}
+.hero-content h1{
+  font-size:clamp(2.5rem,7vw,6rem);
+  font-weight:800;
+}
+.hero-content p{
+  font-size:clamp(1.1rem,3vw,2rem);
+  margin-top:12px;
+}
 
-  /* ===== HERO ===== */
-  .hero {
-    position: relative;
-    width: 100%;
-    height: 100vh;
-    overflow: hidden;
+/* ===== BACK BUTTON ===== */
+.back-btn{
+  position:sticky;
+  top:20px;
+  left:20px;
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.8rem;
+  cursor:pointer;
+  z-index:5;
+  background:rgba(255,255,255,.8);
+  backdrop-filter:blur(6px);
+}
+
+/* ===== SECTION ===== */
+.section{
+  position:relative;
+  margin-top:100vh;
+  padding:80px 6vw 120px;
+  z-index:2;
+}
+
+/* ===== INFOS LAYOUT ===== */
+.infos-wrapper{
+  display:grid;
+  grid-template-columns:2fr 1fr;
+  gap:60px;
+  margin-bottom:80px;
+}
+.description{
+  white-space:pre-wrap;
+  line-height:1.6;
+  font-size:1.05rem;
+}
+.infos{
+  display:flex;
+  flex-direction:column;
+  gap:24px;
+}
+.info-title{
+  font-weight:800;
+  margin-bottom:6px;
+}
+
+/* ===== GALLERY ===== */
+.gallery{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:20px;
+}
+.gallery img{
+  width:100%;
+  border-radius:14px;
+  object-fit:cover;
+}
+
+/* ===== GO BUTTON ===== */
+.go-btn{
+  position:sticky;
+  bottom:20px;
+  margin-left:auto;
+  display:inline-block;
+  background:#000;
+  color:#fff;
+  padding:14px 28px;
+  border-radius:999px;
+  font-weight:600;
+  text-align:center;
+  transition:.3s;
+}
+.go-btn:hover{
+  background:#fff;
+  color:#000;
+}
+
+/* ===== MOBILE ===== */
+@media(max-width:768px){
+  .infos-wrapper{
+    grid-template-columns:1fr;
+    gap:40px;
   }
-
-  .hero.fixed-hero {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    z-index: -1;
+  .gallery{
+    grid-template-columns:1fr;
   }
-
-  .hero img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-
-  .hero-content {
-    position: absolute;
-    z-index: 2;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    color: #fff;
-    width: 100%;
-    opacity: 0;
-    animation: fadeSlideUp 1s forwards;
-    animation-delay: 0.5s;
-  }
-
-  .hero-content h1 {
-    font-size: clamp(3rem, 8vw, 6rem);
-    font-weight: 800;
-    margin-bottom: 1rem;
-  }
-
-  .hero-content p {
-    font-size: clamp(1.2rem, 3vw, 2rem);
-    font-weight: 400;
-  }
-
-  @keyframes fadeSlideUp {
-    to { opacity: 1; transform: translate(-50%, -50%); }
-  }
-
-  /* ===== BACK BUTTON ===== */
-  .back-btn {
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    z-index: 20;
-    font-size: 2rem;
-    cursor: pointer;
-    color: #fff;
-    background: rgba(0,0,0,0.4);
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  /* ===== SECTION ===== */
-  .section {
-    position: relative;
-    padding: 40px 20px;
-    margin-top: 100vh; /* démarre après le hero */
-    z-index: 1;
-  }
-
-  .description {
-    white-space: pre-wrap;
-    margin-bottom: 30px;
-  }
-
-  .infos {
-    margin-bottom: 30px;
-    line-height: 1.5;
-  }
-
-  .infos p { margin: 4px 0; }
-
-  .gallery {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 16px;
-    margin-bottom: 30px;
-  }
-
-  .gallery img {
-    width: 100%;
-    border-radius: 12px;
-    object-fit: cover;
-  }
-
-  /* ===== GO BUTTON ===== */
-  .go-btn {
-    position: sticky;
-    bottom: 20px;
-    display: inline-block;
-    background: #000;
-    color: #fff;
-    padding: 14px 24px;
-    border-radius: 50px;
-    font-weight: 600;
-    cursor: pointer;
-    text-align: center;
-    font-size: 1rem;
-    z-index: 10;
-  }
-
-  /* ===== RESPONSIVE ===== */
-  @media(max-width:768px){
-    .hero-content {
-      position: relative;
-      top: auto;
-      left: auto;
-      transform: none;
-      text-align: left;
-      bottom: 20px;
-      width: calc(100% - 40px);
-    }
-
-    .hero.fixed-hero { position: fixed; } 
-    .section { margin-top: 100vh; }
-  }
-
+}
 </style>
 </head>
+
 <body>
 
-<div class="hero fixed-hero">
-  <img class="hero-img" src="" alt="Hero">
+<!-- ===== HERO ===== -->
+<div class="hero">
+  <img id="heroImg" alt="">
   <div class="hero-content">
     <h1 id="title"></h1>
     <p id="subtitle"></p>
   </div>
-  <div class="back-btn" onclick="history.back()">←</div>
 </div>
 
-<div class="section" id="section">
-  <div class="description" id="description"></div>
-  <div class="infos" id="infos"></div>
+<div class="back-btn" id="backBtn" onclick="history.back()">←</div>
+
+<!-- ===== SECTION ===== -->
+<section class="section" id="section">
+  <div class="infos-wrapper">
+    <div class="description" id="description"></div>
+
+    <div class="infos">
+      <div>
+        <div class="info-title">Dates</div>
+        <div id="dates"></div>
+      </div>
+
+      <div>
+        <div class="info-title">Lieu</div>
+        <div id="lieu"></div>
+      </div>
+
+      <div>
+        <div class="info-title">Tarif</div>
+        <div id="price"></div>
+      </div>
+    </div>
+  </div>
+
   <div class="gallery" id="gallery"></div>
-  <a class="go-btn" href="#" id="goBtn">GO</a>
-</div>
+
+  <a class="go-btn" id="goBtn" target="_blank">GO</a>
+</section>
 
 <script>
-const IMAGE_BASE_URL = "https://raw.githubusercontent.com/astridkzn/adeleinparis/main/images/";
-const PHOTO_BASE_URL = "https://raw.githubusercontent.com/astridkzn/adeleinparis/main/photos/";
-const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS-TXMdmEEJopZfjsiTYrj2mVSf7g8srJ82XOsdumjArTMPIYhkEqBaMuICXNMnP347qAd-5OFFeXAx/pub?output=csv";
+const reco = JSON.parse(localStorage.getItem("currentReco"));
+if(!reco) location.href="index.html";
 
-let recos = [];
-const currentReco = JSON.parse(localStorage.getItem("currentReco"));
+/* ===== IMAGE ===== */
+const heroImg=document.getElementById("heroImg");
+heroImg.src=window.innerWidth<=768 && reco.background
+  ? `images/${reco.background}`
+  : `images/${reco.fullscreen}`;
 
-if (!currentReco) window.location.href = "index.html";
+/* ===== TEXT ===== */
+title.innerText=reco.title||"";
+subtitle.innerText=reco.subtitle||"";
 
-function parseCSV(str){
-  const lines = str.trim().split("\n");
-  const headers = lines.shift().split(",").map(h=>h.trim());
-  return lines.map(line=>{
-    const values = line.split(",").map(v=>v.trim());
-    const obj = {};
-    headers.forEach((h,i)=> obj[h]=values[i]||"");
-    return obj;
-  });
+if(reco.color_secondary){
+  title.style.color=`#${reco.color_secondary}`;
+  subtitle.style.color=`#${reco.color_secondary}`;
+  document.getElementById("backBtn").style.color=`#${reco.color_secondary}`;
 }
 
-function formatDate(str){
-  if(!str) return "";
-  const options = { day:'numeric', month:'long', year:'numeric' };
-  return new Date(str).toLocaleDateString('fr-FR', options);
+/* ===== SECTION COLORS ===== */
+if(reco.color){
+  section.style.background=`#${reco.color}`;
+  section.style.color=reco.color_secondary ? `#${reco.color_secondary}` : "#fff";
 }
 
-/* ===== HERO ===== */
-const heroImg = document.querySelector(".hero-img");
-const heroTitle = document.getElementById("title");
-const heroSubtitle = document.getElementById("subtitle");
+/* ===== DESCRIPTION ===== */
+description.innerText=reco.description||"";
 
-const isMobile = window.innerWidth <= 768;
-const heroSrc = isMobile ? (currentReco.background ? IMAGE_BASE_URL+currentReco.background : "") 
-                         : (currentReco.fullscreen ? IMAGE_BASE_URL+currentReco.fullscreen : "");
-
-heroImg.src = heroSrc;
-
-heroTitle.innerText = currentReco.title || "";
-heroSubtitle.innerText = currentReco.subtitle || "";
-
-if(currentReco.color_secondary){
-  heroTitle.style.color = `#${currentReco.color_secondary}`;
-  heroSubtitle.style.color = `#${currentReco.color_secondary}`;
+/* ===== DATES ===== */
+function formatDate(d){
+  return new Date(d).toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
 }
+dates.innerText = reco.start_date && reco.end_date
+  ? `${formatDate(reco.start_date)} → ${formatDate(reco.end_date)}`
+  : "";
 
-/* ===== SECTION ===== */
-const section = document.getElementById("section");
-if(currentReco.color) section.style.backgroundColor = `#${currentReco.color}`;
-if(currentReco.color_secondary) section.style.color = `#${currentReco.color_secondary}`;
-
-document.getElementById("description").innerText = currentReco.description || "";
-
-const infosDiv = document.getElementById("infos");
-let start = formatDate(currentReco.start_date);
-let end = formatDate(currentReco.end_date);
-infosDiv.innerHTML = `<p>Dates : ${start} — ${end}</p><p>Prix : ${currentReco.prix || "N/A"}</p>`;
+/* ===== LIEU / PRIX ===== */
+lieu.innerText=reco.lieu||"";
+price.innerText=reco.prix||"";
 
 /* ===== GALLERY ===== */
-const galleryDiv = document.getElementById("gallery");
-let i = 1;
-while(currentReco[`photo${i}`]){
-  const img = document.createElement("img");
-  img.src = currentReco[`photo${i}`].startsWith("http") ? currentReco[`photo${i}`] : PHOTO_BASE_URL+currentReco[`photo${i}`];
-  galleryDiv.appendChild(img);
+let i=1;
+while(reco[`photo${i}`]){
+  const img=document.createElement("img");
+  img.src=`photos/${reco[`photo${i}`]}`;
+  gallery.appendChild(img);
   i++;
 }
 
-/* ===== GO BUTTON ===== */
-const goBtn = document.getElementById("goBtn");
-if(currentReco.URL){
-  goBtn.href = currentReco.URL;
-  goBtn.target = "_blank";
+/* ===== GO ===== */
+if(reco.URL){
+  goBtn.href=reco.URL;
 }
 </script>
 
