@@ -281,6 +281,7 @@
   <script>
     const startInput = document.getElementById("start-date");
     const endInput = document.getElementById("end-date");
+    const noDateCheckbox = document.getElementById("no-date-checkbox");
 
     const titleWrapper = document.querySelector(".hero-title-wrapper");
     const overlayWrapper = document.querySelector(".overlay-wrapper");
@@ -308,11 +309,22 @@
     });
 
     document.getElementById("generate-btn").onclick = () => {
+
+      if (noDateCheckbox.checked) {
+        localStorage.setItem("noDate", "true");
+        localStorage.removeItem("startDate");
+        localStorage.removeItem("endDate");
+
+        window.location.href = "generate.html";
+        return;
+      }
+
       if (!startInput.value || !endInput.value || startInput.value > endInput.value) {
         alert("Merci de choisir un intervalle valide");
         return;
       }
 
+      localStorage.setItem("noDate", "false");
       localStorage.setItem("startDate", startInput.value);
       localStorage.setItem("endDate", endInput.value);
       window.location.href = "generate.html";
