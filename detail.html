@@ -2,225 +2,223 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Détail — Adele in Paris</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Detail Page</title>
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Sora', sans-serif; background: #fff; color: #111; overflow-x: hidden; scrollbar-width: none; }
-body::-webkit-scrollbar { width: 0; background: transparent; }
-
-a { text-decoration: none; }
-
-/* ===== HERO ===== */
-.hero {
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  overflow: hidden;
-}
-.hero img.hero-img {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  object-fit: cover;
-  z-index: 1;
-}
-.hero-content {
-  position: absolute;
-  z-index: 2;
-  width: 70%;
-  max-width: 1200px;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  color: #fff;
-  background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2));
-  padding: 20px;
-  border-radius: 12px;
-}
-.hero-content h1 {
-  font-size: clamp(3rem, 8vw, 6rem);
-  font-weight: 800;
-  margin-bottom: 1rem;
-}
-.hero-content p {
-  font-size: clamp(1.5rem, 3vw, 2rem);
-  font-weight: 400;
-}
-
-/* ===== BACK BUTTON ===== */
-.back-btn {
-  position: sticky;
-  top: 20px; left: 20px;
-  z-index: 20;
-  font-size: 2rem;
-  cursor: pointer;
-  color: #fff;
-  background: #000;
-  border-radius: 50%;
-  width: 50px; height: 50px;
-  display: flex; align-items: center; justify-content: center;
-  transition: all 0.3s ease;
-}
-.back-btn:hover { background-color: var(--color-secondary); color: #fff; }
-
-/* ===== SECTION ===== */
-.section {
-  padding: 40px 20px;
-  position: relative;
-}
-.section-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 40px;
-}
-@media(min-width: 768px) {
-  .section-grid { grid-template-columns: 2fr 1fr; gap: 60px; }
-}
-.section h2 { font-weight: 700; margin-bottom: 8px; font-size: 1.25rem; }
-
-/* ===== DESCRIPTION & INFOS ===== */
-.description { white-space: pre-wrap; line-height: 1.6; }
-.infos p { margin: 4px 0; }
-.info-block { margin-bottom: 16px; }
-
-/* ===== GALLERY ===== */
-.gallery {
-  display: grid;
-  gap: 16px;
-  margin-top: 40px;
-}
-@media(min-width: 768px) { .gallery { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); } }
-@media(max-width: 767px) { .gallery { grid-template-columns: 1fr; } }
-.gallery img {
-  width: 100%;
-  border-radius: 12px;
-  object-fit: cover;
-  opacity: 0;
-  transform: scale(0.98);
-  transition: all 0.5s ease;
-}
-.gallery img.visible { opacity: 1; transform: scale(1); }
-.gallery img:hover { transform: scale(1.05); }
-
-/* ===== GO BUTTON ===== */
-.go-wrapper { display: flex; justify-content: flex-end; margin-top: 20px; }
-.go-btn {
-  padding: 28px 48px;
-  font-size: 1.2rem;
-  text-decoration: none;
-  background: #000;
-  color: #fff;
-  border-radius: 50px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  opacity: 0;
-  transform: translateY(20px);
-}
-.go-btn:hover { background-color: var(--color-secondary); color: #fff; }
-.go-btn.visible { opacity: 1; transform: translateY(0); }
-
-/* ===== RESPONSIVE HERO MOBILE ===== */
-@media(max-width: 767px) {
-  .hero-content {
-    width: 90%;
-    font-size: 1.5rem;
+  :root {
+    --color-secondary: #ff6600; /* Exemple, remplace par dynamique si besoin */
   }
-  .hero-content h1 { font-size: clamp(4rem, 10vw, 6rem); }
-  .hero-content p { font-size: clamp(1.5rem, 4vw, 2rem); }
-}
+
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  body::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* --- HERO --- */
+  .hero {
+    position: relative;
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #fff;
+  }
+  .hero-text {
+    max-width: 70%;
+    padding: 0 20px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.3));
+    border-radius: 10px;
+  }
+  .hero-title {
+    font-size: 3rem;
+    margin: 0;
+  }
+  .hero-subtitle {
+    font-size: 1.8rem;
+    margin: 0;
+  }
+  @media(max-width: 768px){
+    .hero-title { font-size: 4.5rem; }
+    .hero-subtitle { font-size: 2.7rem; }
+  }
+
+  /* --- BACK BUTTON --- */
+  .back-btn {
+    position: sticky;
+    top: 20px;
+    left: 20px;
+    background: #000;
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    z-index: 10;
+  }
+  .back-btn:hover {
+    background-color: var(--color-secondary);
+    color: #fff;
+  }
+
+  /* --- SECTION INFOS --- */
+  .section-info {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 40px 20px;
+  }
+  .info-left, .info-right {
+    box-sizing: border-box;
+  }
+  .info-left {
+    flex: 1 1 60%;
+    padding-right: 20px;
+  }
+  .info-right {
+    flex: 1 1 40%;
+    padding-left: 20px;
+  }
+  .info-title {
+    font-weight: bold;
+    font-size: 1.5em; /* x1.5 */
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+  @media(max-width: 768px){
+    .info-left, .info-right {
+      flex: 1 1 100%;
+      padding: 0;
+    }
+  }
+
+  /* --- GALLERY --- */
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    padding: 40px 20px;
+  }
+  .gallery img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.3s ease, opacity 0.5s ease;
+    opacity: 0;
+  }
+  .gallery img.visible {
+    opacity: 1;
+  }
+  .gallery img:hover {
+    transform: scale(1.05);
+  }
+  @media(max-width: 768px){
+    .gallery {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* --- BUTTON GO --- */
+  .go-wrapper {
+    position: relative;
+  }
+  .go-btn {
+    position: sticky;
+    bottom: 40px;
+    right: 20px;
+    display: inline-block;
+    padding: 28px 48px; /* x2 taille */
+    font-size: 1.2rem;
+    background: var(--color-secondary);
+    color: #fff;
+    border-radius: 50px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  .go-btn.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .go-btn:hover {
+    background-color: var(--color-secondary);
+    color: #000;
+  }
 </style>
 </head>
 <body>
 
-<div class="hero">
-  <img class="hero-img" src="" alt="Hero">
-  <div class="hero-content">
-    <h1 id="title"></h1>
-    <p id="subtitle"></p>
-  </div>
-  <div class="back-btn" onclick="history.back()">←</div>
-</div>
+<a href="#" class="back-btn">&#8592; Retour</a>
 
-<section class="section" id="section">
-  <div class="section-grid">
-    <div>
-      <h2>Description</h2>
-      <div class="description" id="description"></div>
-    </div>
-    <div class="infos">
-      <div class="info-block">
-        <h2>Lieu</h2>
-        <p id="lieu"></p>
-      </div>
-      <div class="info-block">
-        <h2>Dates</h2>
-        <p id="dates"></p>
-      </div>
-      <div class="info-block">
-        <h2>Tarif</h2>
-        <p id="tarif"></p>
-      </div>
-    </div>
-  </div>
-  <div class="gallery" id="gallery"></div>
-  <div class="go-wrapper">
-    <a class="go-btn" href="#" target="_blank" id="goBtn">GO</a>
+<section class="hero" style="background-image:url('hero-image.jpg');">
+  <div class="hero-text">
+    <h1 class="hero-title">Titre de la reco</h1>
+    <p class="hero-subtitle">Sous-titre descriptif</p>
   </div>
 </section>
 
+<section class="section-info" id="section">
+  <div class="info-left">
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Description détaillée de la reco.</p>
+  </div>
+  <div class="info-right">
+    <div class="info-title">Dates</div>
+    <p>Du 01/01/2026 au 15/01/2026</p>
+
+    <div class="info-title">Tarif</div>
+    <p>50€ - 120€</p>
+
+    <div class="info-title">Lieu</div>
+    <p>Paris, France</p>
+  </div>
+</section>
+
+<section class="gallery">
+  <img src="img1.jpg" alt="Image 1">
+  <img src="img2.jpg" alt="Image 2">
+  <img src="img3.jpg" alt="Image 3">
+</section>
+
+<div class="go-wrapper">
+  <a class="go-btn" href="#" target="_blank" id="goBtn">GO</a>
+</div>
+
 <script>
-const currentReco = JSON.parse(localStorage.getItem("currentReco"));
-if(!currentReco){ window.location.href="index.html"; }
+  // Fade-in bouton GO
+  const sectionEl = document.getElementById("section");
+  const goBtnEl = document.getElementById("goBtn");
 
-// COLOR SECONDARY
-const colorSecondary = currentReco.color_secondary ? `#${currentReco.color_secondary}` : "#000";
-document.documentElement.style.setProperty('--color-secondary', colorSecondary);
+  const goObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        goBtnEl.classList.add("visible");
+        goObserver.unobserve(sectionEl);
+      }
+    });
+  }, {threshold: 0.2});
 
-// HERO
-const heroImg = document.querySelector(".hero-img");
-heroImg.src = currentReco.fullscreen || currentReco.background || "";
-document.getElementById("title").innerText = currentReco.title || "";
-document.getElementById("subtitle").innerText = currentReco.subtitle || "";
+  goObserver.observe(sectionEl);
 
-// SECTION
-document.getElementById("description").innerText = currentReco.description || "";
-document.getElementById("lieu").innerText = currentReco.lieu || "";
-const startDate = new Date(currentReco.start_date);
-const endDate = new Date(currentReco.end_date);
-const options = { day:"numeric", month:"long", year:"numeric" };
-document.getElementById("dates").innerText = startDate && endDate ? `${startDate.toLocaleDateString("fr-FR", options)} → ${endDate.toLocaleDateString("fr-FR", options)}` : "";
-document.getElementById("tarif").innerText = currentReco.prix || "";
-
-// GALLERY
-const galleryDiv = document.getElementById("gallery");
-let i = 1;
-while(currentReco[`photo${i}`]){
-  const img = document.createElement("img");
-  img.src = currentReco[`photo${i}`].startsWith("http") ? currentReco[`photo${i}`] : `photos/${currentReco[`photo${i}`]}`;
-  galleryDiv.appendChild(img);
-  // fade in léger
-  setTimeout(()=>img.classList.add("visible"), i*150);
-  i++;
-}
-
-// GO BUTTON
-const goBtnEl = document.getElementById("goBtn");
-goBtnEl.href = currentReco.URL || "#";
-
-// FADE GO BUTTON AU SCROLL
-const sectionEl = document.getElementById("section");
-const goObserver = new IntersectionObserver(entries=>{
-  entries.forEach(entry=>{
-    if(entry.isIntersecting){
-      goBtnEl.classList.add("visible");
-      goObserver.unobserve(sectionEl);
-    }
-  });
-},{threshold:0.3});
-goObserver.observe(sectionEl);
+  // Fade-in images galerie
+  const galleryImgs = document.querySelectorAll(".gallery img");
+  const imgObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add("visible");
+        imgObserver.unobserve(entry.target);
+      }
+    });
+  }, {threshold:0.1});
+  galleryImgs.forEach(img => imgObserver.observe(img));
 </script>
+
 </body>
 </html>
