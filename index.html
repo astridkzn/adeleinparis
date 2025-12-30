@@ -174,10 +174,15 @@
       }
 
       .hero-title {
-        top: 18%;
-        left: 6%;
-        transform: translateY(40px);
+        top: 14%;
+        left: 50%;
+        transform: translateX(-50%);
+        
+        animation: none !important;
+        opacity: 1;
+
         text-align: center;
+        max-width: 90%;
 
         font-size: clamp(6rem, 18vw, 8rem);
         line-height: 0.85;
@@ -262,6 +267,9 @@
 
     /* ===== PARALLAX MAGAZINE ===== */
     window.addEventListener("scroll", () => {
+
+      if (window.innderWidth <= 768) return;
+      
       const y = window.scrollY;
 
       titleWrapper.style.transform = `translateY(${y * 0.18}px)`;
