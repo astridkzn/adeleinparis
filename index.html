@@ -175,6 +175,42 @@
       background: #fff;
       color: #ff4632
     }
+    .no-date-option {
+        margin-top:30px;
+        font-size:0.75rem;
+        font-weight: 400;
+      }
+
+      .no-date-option label {
+        opacity: 0.25;
+        transition: opacity 0.3s ease;
+        cursor: pointer;
+      }
+
+      .no-date-option input {
+        -webkit-tap-highlight-color; transparent;
+        outline: none;
+        border: none;
+        width:16px;
+        height:16px;
+        margin-right: 10px;
+        vertical-align: middle;
+        custor: pointer;
+        appearance: none;
+        background-color: #fff;
+        border: 1px solid #ff4632;
+        border-radius: 4px;
+        
+        transform: scale(1.1);
+      }
+      
+      .no-date-option input:checked + label {
+        opacity: 0.75;
+      }
+
+      .no-date-option input:checked {
+        background-color:#ff4632;
+      }
 
     /* ===================== MOBILE ===================== */
     @media (max-width: 768px) {
@@ -225,8 +261,9 @@
       }
 
       .no-date-option {
-        margin-top:36px;
+        margin-top:30px;
         font-size:0.75rem;
+        font-weight: 400;
       }
 
       .no-date-option label {
@@ -239,15 +276,25 @@
         -webkit-tap-highlight-color; transparent;
         outline: none;
         border: none;
-        
-        opacity: 0.25;
-        custor: pointer;
-        transition: opacity 0.3s ease;
+        width:16px;
+        height:16px;
         margin-right: 10px;
+        vertical-align: middle;
+        custor: pointer;
+        appearance: none;
+        background-color: #fff;
+        border: 1px solid #ff4632;
+        border-radius: 4px;
+        
         transform: scale(1.1);
       }
+      
       .no-date-option input:checked + label {
         opacity: 0.75;
+      }
+
+      .no-date-option input:checked {
+        background-color:#ff4632;
       }
     }
   </style>
