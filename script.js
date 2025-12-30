@@ -51,6 +51,7 @@ function filterByDates(data) {
 
   const startDate = new Date(startFilter);
   const endDate = new Date(endFilter);
+  const noDateCheckbox = document.getElementById("no-date-checkbox");
 
   return data.filter(r => {
     if (!r.start_date || !r.end_date) return false;
